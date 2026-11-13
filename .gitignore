@@ -1,0 +1,27 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+coverage/
+*.tsbuildinfo
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# logs
+*.log
+npm-debug.log*
+
+# local tooling
+.remember/
+.claude/settings.local.json
