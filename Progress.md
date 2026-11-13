@@ -10,7 +10,7 @@
 
 | Milestone | 狀態 |
 |---|---|
-| M0 決策定案 | 進行中（0/9） |
+| M0 決策定案 | 進行中（1/9） |
 | M1 鷹架 | 未開始 |
 | M2 Core | 未開始 |
 | M3 Renderers | 未開始 |
@@ -63,6 +63,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | — | `Result.query` 為 `string \| null` | §4.3 單一 target blocking error |
 | 2026-11-13 | — | 去重保留首次出現大小寫 | §4.1 未指定；確保輸出穩定（T25） |
 | 2026-11-13 | — | PubMed URL 過長時停用連結 | §6.3 上限與 URL 實務長度衝突 |
+| 2026-11-13 | D1 | free text 僅允許 ASCII 字母／數字／空白／連字號；含空白或連字號一律加引號；apostrophe 與非 ASCII 字母 v1 拒絕並附改寫建議 | Elsevier support 無 apostrophe escape 記載；雙引號包覆未經測試，M7 實測後再評估放行 |
 
 ## 變更紀錄
 
