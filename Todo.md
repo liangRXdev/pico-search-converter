@@ -14,8 +14,8 @@
   - 建議：使用者**明確加引號**才接受含 and/or/not 的片語；未加引號一律拒絕並提示加引號（不分大小寫）
 - [x] **D3 UI 技術** — 2026-11-13 定案：**React**（推翻建議；與既有專案一致）
   - 連帶：`src/main.tsx` + `src/ui/*.tsx`；props 定義 interface、不用 `any`；CSS 採 BEM；禁用 `dangerouslySetInnerHTML`（T17）；`src/core`、`src/render` 維持與 React 無關的純函式
-- [ ] **D4 視覺路由**（CLAUDE.md §9）：`pharmacy-tool-style` vs `frontend-design`
-  - 建議：`pharmacy-tool-style`（查詢站性質，沿用既有 token）
+- [x] **D4 視覺路由** — 2026-11-13 定案：**`frontend-design`**（推翻建議；定位偏教學與展示，建立獨立視覺識別）
+  - 連帶：M5 動 UI 前載入 `frontend-design` skill；warning／「Not live-validated」／MeSH vs Emtree 的視覺層級仍須顯眼（spec §7）
 - [ ] **D5 字型載入**：Noto Sans TC + DM Mono 若走 Google Fonts CDN，牴觸 §2.3「無外部請求」精神與 T23
   - 建議：`@fontsource` self-host（DM Mono 全量、Noto Sans TC 用系統字型 fallback 優先以控制體積）
 - [ ] **D6 UI／瀏覽器層測試範圍**：T17、T20、T23、T24 無法只靠純函式單元測試
