@@ -9,7 +9,7 @@
 - [ ] **D1 字元白名單與 apostrophe 政策**（§4.1 只說「無法保證就拒絕」，沒定義允許字元）
   - 影響：`Crohn's disease`、`beta-blocker`、`COVID-19`、`Sjögren`、`TNF-α`
   - 建議：free text 僅允許 ASCII 字母／數字／空白／連字號；含連字號或空白一律加引號輸出；apostrophe 與非 ASCII 字母 v1 一律拒絕並提示改寫（如 `Crohn disease`）
-  - 前置查證：Embase.com 單引號片語內 apostrophe 的官方 escape 規則（查得到且可測 → 可改為放行）
+  - 查證結果（2026-11-13，Elsevier support 三頁）：**無** apostrophe escape 的官方記載；有記載片語可用單或雙引號；連字號的 tokenization 未記載。→ `'...'` 內含 apostrophe 無法保證安全，雙引號包覆屬未測試推論，需 live 測試才能放行
 - [ ] **D2 片語內 Boolean 字詞**（§2.1 步驟 2「含空白 → 自動片語」與 §4.1／T11「raw AND 拒絕」衝突，`signs and symptoms` 無解）
   - 建議：使用者**明確加引號**才接受含 and/or/not 的片語；未加引號一律拒絕並提示加引號（不分大小寫）
 - [ ] **D3 UI 技術**：vanilla TS（spec §3.1 結構）vs React
