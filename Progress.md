@@ -4,9 +4,11 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M3 完成，下一步 M4 匯出；live 測試包已可送驗**
-- 程式碼：鷹架、型別、config、佔位 App、core、三個平台 renderer；`typecheck`／`test`（140 個）／`build` 本機通過
-- 阻塞：無（live 驗證與 M4–M6 可並行；驗證結果可能回頭修改 renderer）
+- 階段：**M4、M5 完成，下一步 M6 CI／部署／文件；live 測試包待使用者執行**
+- 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（166 個）／`build` 本機通過
+- build 產物：JS 252 kB（gzip 81 kB）、CSS 8.8 kB、字型 woff2 兩個各約 15 kB
+- 阻塞：無
+- 未完成的驗證：UI 尚未目視檢查（截圖工具逾時），手機寬度未實測
 - 三個平台目前皆為 **Not live-validated**
 
 | Milestone | 狀態 |
@@ -15,8 +17,8 @@
 | M1 鷹架 | 完成（2026-11-13） |
 | M2 Core | 完成（2026-11-13） |
 | M3 Renderers | 完成（2026-11-13）；輸出格式未經 live 驗證 |
-| M4 匯出 | 未開始 |
-| M5 UI | 未開始 |
+| M4 匯出 | 完成（2026-11-13） |
+| M5 UI | 完成（2026-11-13）；待目視檢查 |
 | M6 CI／部署／文件 | 未開始 |
 | M7 Live 驗證與發布 | 未開始 |
 
@@ -85,6 +87,12 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | — | Ovid：含保留字（and/or/not/adj/use/from/exp/same/with/freq）的 heading 或單一詞加雙引號 | 避免被解析為運算子；**清單為假設**，待 live 測試包 B3 驗證 |
 | 2026-11-13 | — | renderer 對未經 core 驗證的值直接拋錯 | spec §4.3：不得未經驗證就拼進語法分隔符 |
 | 2026-11-13 | — | PubMed 連結由 `buildPubmedUrl` 另外產生，不放進 `Result` | 維持 spec §3.3 的 `Result` 形狀 |
+| 2026-11-13 | — | `Result` 增加 `groups`（每個概念的輸出片段） | UI 分色需要結構；用字串切 ` AND ` 會被片語內的大寫 AND 破壞 |
+| 2026-11-13 | — | 起始畫面預載 spec §5 範例 | 教學／展示定位：打開即是可操作的示範；「清空」後顯示引導而非錯誤 |
+| 2026-11-13 | — | live preview 等待期間（debounce）輸出顯示「更新中」並停用 Copy | D9：不得複製到與輸入不一致的 query |
+| 2026-11-13 | — | 「結構轉譯非等價」聲明固定顯示在輸出區頂端一次，不在三個平台各重複 | spec §7.1 要求常駐；重複三次會稀釋其他警告 |
+| 2026-11-13 | — | TXT 匯出含輸入內容；下載時加 UTF-8 BOM | 可重現性；舊版 Windows 記事本判讀中文 |
+| 2026-11-13 | — | 視覺：冷白底＋墨藍字，P/I/C/O 四色貫穿輸入與輸出；query 用 IBM Plex Mono | D4 frontend-design；分色本身承載「哪些是你的詞、哪些是平台語法」的教學資訊 |
 
 ## 實作注意（踩過的坑）
 
@@ -92,6 +100,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-13：M4 匯出與 M5 UI 完成（React 元件、分色輸出、TXT 匯出、32 個新測試）。
 - 2026-11-13：M3 Renderers 完成（三平台 emitter、4 個 golden fixture、29 個測試）；產出 `docs/live-validation.md`。
 - 2026-11-13：M2 Core 完成（normalize／validate／buildAst + 105 個測試）。
 - 2026-11-13：M0 D1–D9 定案；M1 鷹架完成（Vite + React + TS strict + Vitest/jsdom）。

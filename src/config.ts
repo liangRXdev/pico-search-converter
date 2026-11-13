@@ -1,5 +1,39 @@
 import type { ConceptId, Platform } from './model/types';
 
+export const APP_NAME = 'PICO 檢索語法轉換器';
+export const APP_VERSION = '0.1.0';
+
+/** 語法規則的查證來源（spec §1.1），顯示於頁尾與 TXT 匯出。 */
+export const SOURCE_LINKS: readonly { label: string; url: string }[] = [
+  { label: 'NLM PubMed User Guide', url: 'https://pubmed.ncbi.nlm.nih.gov/help/' },
+  { label: 'NLM MeSH Browser', url: 'https://meshb.nlm.nih.gov/' },
+  {
+    label: 'Elsevier Embase：field codes',
+    url: 'https://www.elsevier.support/embase/answer/what-field-codes-can-i-use-in-embase',
+  },
+  {
+    label: 'Elsevier Embase：Boolean、wildcards、proximity',
+    url: 'https://www.elsevier.support/embase/answer/can-i-use-boolean-operators-wildcards-and-proximity-operators-in-embase',
+  },
+  {
+    label: 'Elsevier Embase：how to search',
+    url: 'https://www.elsevier.support/embase/answer/how-do-i-search-in-embase',
+  },
+  { label: 'Ovid Quick Reference Card', url: 'https://tools.ovid.com/ovidtools/pdf/OvidQRC.pdf' },
+  {
+    label: 'NCBI Bookshelf：Ovid syntax guide',
+    url: 'https://www.ncbi.nlm.nih.gov/books/NBK601822/table/t11/?report=objectonly',
+  },
+  {
+    label: 'Cochrane Handbook, Chapter 4',
+    url: 'https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-04',
+  },
+];
+
+/** 匯出與畫面共用的固定聲明（spec §7）。 */
+export const DISCLAIMER =
+  '三組查詢是語法結構的轉譯，不是經過驗證的完整檢索策略。各平台的欄位涵蓋範圍只是近似，收錄內容不同，MeSH 與 Emtree 也不是一對一對應；命中筆數不會相同。請在各資料庫實際執行，檢查 search details 與 subject heading 的對應，並記錄檢索日期、資料庫、平台與完整字串。';
+
 /** AND 連接與畫面呈現的固定順序（spec §4.2）。 */
 export const CONCEPT_ORDER: readonly ConceptId[] = ['P', 'I', 'C', 'O'];
 

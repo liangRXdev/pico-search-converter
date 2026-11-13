@@ -97,8 +97,19 @@ export interface ValidationIssue extends Message {
   index?: number;
 }
 
+/** 單一概念在某平台的輸出片段，供 UI 分色顯示；`parts` 以 OR 連接。 */
+export interface QueryGroup {
+  concept: ConceptId;
+  parts: string[];
+}
+
 export interface Result {
   platform: Platform;
+  /**
+   * query 的結構化版本：`groups` 依序以 `(a OR b)` 組合、以 ` AND ` 連接即等於 query。
+   * query 為 null 時為空陣列。
+   */
+  groups: QueryGroup[];
   /**
    * 可直接貼上執行的 query。該平台有 blocking error 時為 null
    * （spec §4.3：不得輸出空 OR 群組或誤導性的 query）。

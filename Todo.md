@@ -79,8 +79,9 @@
 
 ## M4 — 匯出
 
-- [ ] `export/txt.ts`：三組 query、warnings、disclaimer、產生日期、來源連結；UTF-8（T21）
-- [ ] 時間戳以參數注入，確保 T25 可重現
+- [x] `export/txt.ts`：輸入內容、三組 query、warnings、驗證狀態、disclaimer、產生時間、來源連結（T21）
+- [x] 時間戳以參數注入，確保 T25 可重現；下載時加 UTF-8 BOM
+- [x] `tests/export.test.ts`（10 個測試）
 
 ## M5 — UI（D3–D5、D9 定案後）
 

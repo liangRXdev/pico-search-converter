@@ -9,6 +9,7 @@ import type {
   Message,
   Platform,
   QueryAst,
+  QueryGroup,
   Result,
 } from '../model/types';
 
@@ -106,24 +107,31 @@ export function renderWith(ast: QueryAst, emitter: Emitter): Result {
   const { platform } = emitter;
   const errors: Message[] = [];
   const gaps: Message[] = [];
-  const groups: string[] = [];
+  const groups: QueryGroup[] = [];
   for (const concept of ast.concepts) {
     const parts = renderConcept(concept, emitter);
     if (parts.length === 0) {
       errors.push(noTermsError(concept, emitter));
       continue;
     }
-    groups.push(`(${parts.join(' OR ')})`);
+    groups.push({ concept: concept.id, parts });
     const gap = headingGap(concept, emitter);
     if (gap) gaps.push(gap);
   }
-  if (errors.length > 0) return { platform, query: null, warnings: [...errors, ...gaps] };
-  const query = groups.join(' AND ');
+  if (errors.length > 0) {
+    return { platform, groups: [], query: null, warnings: [...errors, ...gaps] };
+  }
+  const query = joinGroups(groups);
   if (query.length > LIMITS.maxQueryLength) {
-    return { platform, query: null, warnings: [tooLong(query, emitter)] };
+    return { platform, groups: [], query: null, warnings: [tooLong(query, emitter)] };
   }
   const extra = emitter.notes?.(ast, query) ?? [];
-  return { platform, query, warnings: [...gaps, ...extra, ...commonNotes(ast, emitter)] };
+  return { platform, groups, query, warnings: [...gaps, ...extra, ...commonNotes(ast, emitter)] };
+}
+
+/** block 內 OR、block 間 AND、每個 block 都加括號（spec §4.2）。 */
+export function joinGroups(groups: readonly QueryGroup[]): string {
+  return groups.map((group) => `(${group.parts.join(' OR ')})`).join(' AND ');
 }
 
 export function hasVocabulary(ast: QueryAst, vocabulary: Vocabulary): boolean {
