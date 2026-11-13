@@ -10,7 +10,7 @@
 
 | Milestone | 狀態 |
 |---|---|
-| M0 決策定案 | 進行中（4/9） |
+| M0 決策定案 | 進行中（5/9） |
 | M1 鷹架 | 未開始 |
 | M2 Core | 未開始 |
 | M3 Renderers | 未開始 |
@@ -67,6 +67,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | D2 | 含 and/or/not 的輸入：使用者明確加引號才接受為片語；未加引號一律拒絕（不分大小寫），提示加引號或分行 | 解 §2.1 與 §4.1／T11 衝突；無引號時無法分辨片語與誤寫的 Boolean 邏輯 |
 | 2026-11-13 | D3 | UI 用 React（非 spec §3.1 的 vanilla TS） | 使用者決定；與既有專案技術棧一致。core／render 仍為純函式 |
 | 2026-11-13 | D4 | 視覺走 `frontend-design`，不沿用 pharmacy-tool-style token | 使用者決定；工具定位偏教學與展示 |
+| 2026-11-13 | D5 | 字型 self-host；拉丁／等寬字 M5 由 frontend-design 選定；中文用系統字型堆疊 | spec §2.3 禁第三方請求；中文 webfont 體積數 MB，教室網路與手機載入慢 |
 
 ## 變更紀錄
 

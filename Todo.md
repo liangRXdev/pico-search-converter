@@ -16,8 +16,8 @@
   - 連帶：`src/main.tsx` + `src/ui/*.tsx`；props 定義 interface、不用 `any`；CSS 採 BEM；禁用 `dangerouslySetInnerHTML`（T17）；`src/core`、`src/render` 維持與 React 無關的純函式
 - [x] **D4 視覺路由** — 2026-11-13 定案：**`frontend-design`**（推翻建議；定位偏教學與展示，建立獨立視覺識別）
   - 連帶：M5 動 UI 前載入 `frontend-design` skill；warning／「Not live-validated」／MeSH vs Emtree 的視覺層級仍須顯眼（spec §7）
-- [ ] **D5 字型載入**：Noto Sans TC + DM Mono 若走 Google Fonts CDN，牴觸 §2.3「無外部請求」精神與 T23
-  - 建議：`@fontsource` self-host（DM Mono 全量、Noto Sans TC 用系統字型 fallback 優先以控制體積）
+- [x] **D5 字型** — 2026-11-13 定案：採建議
+  - 一律 self-host（`@fontsource`），零第三方請求；英文與 query 等寬字由 `frontend-design` 於 M5 選定（不綁 DM Mono）；中文用系統字型堆疊，不打包中文 webfont
 - [ ] **D6 UI／瀏覽器層測試範圍**：T17、T20、T23、T24 無法只靠純函式單元測試
   - 建議：Vitest + jsdom 涵蓋 T17/T20/T24（label、鍵盤可達、clipboard mock）；T23 以「build 產物無外部 URL 請求」靜態檢查 + 手動檢核表；v1 不引入 Playwright
 - [ ] **D7 部署與 repo**：GitHub Pages vs Cloudflare Pages；repo 公開與否；License
