@@ -1,0 +1,108 @@
+# PICO 檢索語法轉換器
+
+輸入 PICO 關鍵字，同時得到三個資料庫介面的檢索語法：
+
+- **PubMed**（NLM 介面）
+- **Embase.com**（Elsevier 介面；**不是** Ovid Embase）
+- **Ovid MEDLINE**（Wolters Kluwer／Ovid 介面）
+
+純前端工具，免安裝、免登入。所有運算都在瀏覽器內完成，不會上傳任何輸入內容。
+
+> **這是語法轉譯工具，不是檢索策略產生器。** 三組輸出的括號與 Boolean 結構相同，但各平台的欄位涵蓋範圍只是近似、收錄內容不同，MeSH 與 Emtree 也不是一對一對應，命中筆數不會相同。輸出不代表系統性文獻回顧等級的完整檢索。
+
+## 驗證狀態
+
+| 平台 | 輸出格式是否已在實際資料庫貼上執行驗證 |
+|---|---|
+| PubMed | 尚未（Not live-validated） |
+| Embase.com (Elsevier) | 尚未（Not live-validated） |
+| Ovid MEDLINE | 尚未（Not live-validated） |
+
+驗證用的查詢與紀錄表在 [`docs/live-validation.md`](docs/live-validation.md)。未完成前，畫面上每個平台都會顯示「尚未實機驗證」。
+
+## 語法對照
+
+| 元素 | PubMed | Embase.com | Ovid MEDLINE |
+|---|---|---|---|
+| 單一詞 | `term[tiab]` | `term:ti,ab,kw` | `term.ti,ab,kf.` |
+| 片語 | `"heart failure"[tiab]` | `'heart failure':ti,ab,kw` | `"heart failure".ti,ab,kf.` |
+| 詞尾截字 | `diabet*[tiab]` | `diabet*:ti,ab,kw` | `diabet*.ti,ab,kf.` |
+| heading（含下位詞） | `"Hypertension"[MeSH Terms]` | `'hypertension'/exp` | `exp Hypertension/` |
+| heading（不含下位詞） | `"Hypertension"[MeSH Terms:noexp]` | `'hypertension'/de` | `Hypertension/` |
+
+同一個概念內的詞以 `OR` 連接，概念之間以 `AND` 連接，每個概念都加括號。順序固定為 P → I → C → O；預設只納入 P 與 I。
+
+## 支援的輸入
+
+- 英文單一詞、片語（含空白即視為片語，引號可加可不加）
+- 含連字號的詞（如 `beta-blocker`、`COVID-19`），會加引號輸出
+- 詞尾 `*` 截字：只能用在單一純字母詞，且 `*` 前至少 4 個字母
+- 含 `and`／`or`／`not` 的片語：**必須自己加引號**（如 `"signs and symptoms"`）
+- 自行查證過的 MeSH 與 Emtree heading，兩者分開輸入，並勾選「我已查證」
+
+## 不支援的輸入
+
+以下輸入會被拒絕並說明如何修正，不會被靜默修改或丟棄：
+
+- 撇號（`Crohn's disease` → 請改 `Crohn disease`）與非 ASCII 字母（`Sjögren` → `Sjogren`）
+- 欄位代碼（`[tiab]`、`:ti`、`.mp.`）、括號、未加引號的 `AND`／`OR`／`NOT`
+- 詞首、詞中的 `*`，以及 `?`、`$`、`#`
+- proximity（`[tiab:~N]`、`NEAR/n`、`adjN`）：各平台的距離定義不同，無法直接換算
+- 貼上整串既有的檢索式、日期與語言限制、檢索歷程行號
+
+工具不會做的事：
+
+- **不會把 MeSH 自動轉成 Emtree**，反之亦然。某個概念只有 MeSH、沒有關鍵字時，Embase.com 不會輸出查詢。
+- 不會自動補同義詞、不會推測 PICO、不會呼叫任何 AI 或外部服務。
+- 不重現 PubMed 的 Automatic Term Mapping：所有關鍵字都加了明確的欄位標籤。
+- heading 欄位的內容是你輸入的文字；工具不檢查它是否真的存在於詞彙庫。
+
+## 貼到資料庫之後
+
+1. 執行查詢，確認沒有語法錯誤。
+2. 看 search details 或檢索歷程，確認每個詞與 heading 被解析成你要的意思。
+3. 拿幾篇已知相關的文獻核對，確認查得到。
+4. 記下檢索日期、資料庫、平台與完整的查詢字串。
+
+## 開發
+
+需要 Node.js 22 以上。
+
+```bash
+npm ci
+npm run dev            # 本機開發
+npm run typecheck
+npm test
+npm run build
+npm run check:offline  # 檢查 build 產物沒有外部請求（需先 build）
+```
+
+架構：`UI → normalize + validate → AST → 各平台 emitter`。`src/core` 與 `src/render` 是不依賴 React 的純函式；`tests/golden/*.json` 是固定的輸入與預期輸出。
+
+### 測試涵蓋範圍與限制
+
+規格（`spec.md` §6.1）的 T01–T25 中，以下兩項不是真實瀏覽器的自動化測試：
+
+- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——頁面只載入同源資源，程式碼不含 `fetch`、`XMLHttpRequest` 等網路 API。真實瀏覽器的斷網操作需手動執行。
+- **T24（鍵盤與螢幕閱讀器）**：自動化測試涵蓋控制項的可辨識名稱、原生語意元素、Tab 可達與鍵盤觸發；螢幕閱讀器的實際朗讀需手動檢查。
+
+自動化測試驗證的是「本工具是否依規則產生字串」，不是各資料庫是否接受這些字串，後者見上方的驗證狀態。
+
+## 語法查證來源
+
+查證日期：2026-11-13。
+
+- [NLM PubMed User Guide](https://pubmed.ncbi.nlm.nih.gov/help/)
+- [NLM MeSH Browser](https://meshb.nlm.nih.gov/)
+- [Elsevier Embase：field codes](https://www.elsevier.support/embase/answer/what-field-codes-can-i-use-in-embase)
+- [Elsevier Embase：Boolean、wildcards、proximity](https://www.elsevier.support/embase/answer/can-i-use-boolean-operators-wildcards-and-proximity-operators-in-embase)
+- [Elsevier Embase：how to search](https://www.elsevier.support/embase/answer/how-do-i-search-in-embase)
+- [Ovid Quick Reference Card](https://tools.ovid.com/ovidtools/pdf/OvidQRC.pdf)
+- [NCBI Bookshelf：Ovid syntax guide](https://www.ncbi.nlm.nih.gov/books/NBK601822/table/t11/?report=objectonly)
+- [Cochrane Handbook, Chapter 4](https://www.cochrane.org/authors/handbooks-and-manuals/handbook/current/chapter-04)
+
+廠商介面的語法可能改版；若輸出在資料庫中出現語法錯誤，請以各平台的官方說明為準。
+
+## 授權
+
+程式碼以 [MIT License](LICENSE) 釋出。內含的 IBM Plex Mono 字型以 SIL Open Font License 1.1 授權。

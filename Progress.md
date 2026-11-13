@@ -4,11 +4,11 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M4、M5 完成，下一步 M6 CI／部署／文件；live 測試包待使用者執行**
+- 階段：**M6 本機部分完成；待使用者確認後建立 GitHub repo 並部署。live 測試包待使用者執行**
 - 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（166 個）／`build` 本機通過
 - build 產物：JS 252 kB（gzip 81 kB）、CSS 8.8 kB、字型 woff2 兩個各約 15 kB
 - 阻塞：無
-- 未完成的驗證：UI 尚未目視檢查（截圖工具逾時），手機寬度未實測
+- 未完成的驗證：手機寬度未實測；CI 尚未在 GitHub 上實際跑過
 - 三個平台目前皆為 **Not live-validated**
 
 | Milestone | 狀態 |
@@ -18,8 +18,8 @@
 | M2 Core | 完成（2026-11-13） |
 | M3 Renderers | 完成（2026-11-13）；輸出格式未經 live 驗證 |
 | M4 匯出 | 完成（2026-11-13） |
-| M5 UI | 完成（2026-11-13）；待目視檢查 |
-| M6 CI／部署／文件 | 未開始 |
+| M5 UI | 完成（2026-11-13）；使用者目視通過 |
+| M6 CI／部署／文件 | 本機部分完成；remote／部署待確認 |
 | M7 Live 驗證與發布 | 未開始 |
 
 ## 環境
@@ -93,6 +93,8 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | — | 「結構轉譯非等價」聲明固定顯示在輸出區頂端一次，不在三個平台各重複 | spec §7.1 要求常駐；重複三次會稀釋其他警告 |
 | 2026-11-13 | — | TXT 匯出含輸入內容；下載時加 UTF-8 BOM | 可重現性；舊版 Windows 記事本判讀中文 |
 | 2026-11-13 | — | 視覺：冷白底＋墨藍字，P/I/C/O 四色貫穿輸入與輸出；query 用 IBM Plex Mono | D4 frontend-design；分色本身承載「哪些是你的詞、哪些是平台語法」的教學資訊 |
+| 2026-11-13 | — | 關閉 Vite modulepreload polyfill | 它在 bundle 內加入 fetch；T23 靜態檢查要求產物零網路 API |
+| 2026-11-13 | — | CI 與部署合併為單一 workflow，deploy job 依賴 check job | spec §6.2：checks 通過才部署 |
 
 ## 實作注意（踩過的坑）
 
@@ -100,6 +102,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-13：使用者確認 M5 通過；M6 本機部分完成（CI workflow、離線檢查、README、LICENSE）。
 - 2026-11-13：M4 匯出與 M5 UI 完成（React 元件、分色輸出、TXT 匯出、32 個新測試）。
 - 2026-11-13：M3 Renderers 完成（三平台 emitter、4 個 golden fixture、29 個測試）；產出 `docs/live-validation.md`。
 - 2026-11-13：M2 Core 完成（normalize／validate／buildAst + 105 個測試）。

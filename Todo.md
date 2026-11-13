@@ -97,16 +97,19 @@
 - [x] 字型：IBM Plex Mono（latin 400／600，self-host，OFL-1.1）；中文用系統字型
 - [x] `tests/ui.test.tsx`（22 個測試）：T02、T03、T12、T14、T17、T20、T21、T24
 - [x] 真實 Chrome 檢查（production build）：query 正確、字型載入、雙欄版面、無橫向溢出、無 console error、只有同源請求
-- [ ] **目視檢查未完成**：截圖工具逾時，版面只用 JS 量測驗證；手機寬度未實測。待使用者目視或 M7 補做
+- [x] 目視檢查：使用者於 2026-11-13 確認通過（Claude 端截圖工具逾時，僅以 JS 量測版面）
+- [ ] 手機寬度實測（使用者回覆未提及，列入 M7 手動檢核）
 
 ## M6 — CI／部署／文件
 
+- [x] `.github/workflows/ci.yml`：`npm ci → typecheck → test → build → check:offline`，PR 與 main push；main 通過後部署 GitHub Pages
+- [x] T23：`scripts/check-offline.mjs` 靜態檢查 build 產物（無外部資源、無網路 API、外部主機白名單）；已關閉 Vite modulepreload polyfill 以移除 bundle 內唯一的 fetch
+- [x] `README.md`：支援／不支援語法、驗證狀態、測試限制、來源連結
+- [x] `LICENSE`（MIT）
 - [ ] 建立 GitHub public repo 並 push（**執行前先向使用者確認**）
-- [ ] `.github/workflows/ci.yml`：`npm ci → typecheck → test → build`，PR 與 main push
-- [ ] 部署 workflow（依 D7），checks 通過才部署；Vite `base` 設定
-- [ ] T23：build 產物外部請求靜態檢查
-- [ ] `README.md`：支援／不支援語法、來源連結、驗證限制（§10）
-- [ ] LICENSE
+- [ ] repo 設定：Pages source 設為 GitHub Actions
+- [ ] 確認 CI 在 GitHub 上通過、Pages 網址可開啟
+- [ ] README 補上線上網址
 
 ## M7 — Live 驗證與發布（依 D8）
 
