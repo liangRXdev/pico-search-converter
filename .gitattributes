@@ -1,0 +1,2 @@
+# 統一為 LF：golden fixture 與 TXT 匯出需逐位元組比對（T25），不可受 Windows autocrlf 影響
+* text=auto eol=lf

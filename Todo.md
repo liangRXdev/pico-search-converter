@@ -41,9 +41,10 @@
 
 ## M1 — 專案鷹架
 
-- [ ] Vite + React + TypeScript（strict）+ Vitest 初始化；`npm run typecheck / test / build`
-- [ ] 目錄結構依 §3.1；`src/model/types.ts`（ConceptId、TermNode、Expr、Result、Warning）
-- [ ] `src/config.ts`：輸入上限與 warning code 常數
+- [x] Vite + React + TypeScript（strict）+ Vitest 初始化；`npm run typecheck / test / build`
+- [x] 目錄結構依 §3.1；`src/model/types.ts`（輸入 model、AST、Message、ValidationIssue、Result）
+- [x] `src/config.ts`：順序、平台標籤、輸入上限、live 驗證旗標（message code 常數延至 M2 隨 validate 一起定義）
+- [x] `.gitattributes` 統一 LF
 
 ## M2 — Core（純函式，先寫測試）
 

@@ -4,14 +4,14 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M0 — D1–D9 全數定案，待使用者確認需求摘要後進 M1**
-- 程式碼：尚未開始（無 `package.json`、無 `src/`）
-- 阻塞：需求摘要確認
+- 階段：**M1 完成，下一步 M2 Core**
+- 程式碼：鷹架、型別、config、佔位 App；`typecheck`／`test`（6 個）／`build` 本機通過
+- 阻塞：無
 
 | Milestone | 狀態 |
 |---|---|
-| M0 決策定案 | 決策 9/9 完成；待使用者確認需求摘要 |
-| M1 鷹架 | 未開始 |
+| M0 決策定案 | 完成（2026-11-13） |
+| M1 鷹架 | 完成（2026-11-13） |
 | M2 Core | 未開始 |
 | M3 Renderers | 未開始 |
 | M4 匯出 | 未開始 |
@@ -22,6 +22,7 @@
 ## 環境
 
 - Node v24.15.0／npm 11.12.1／git 2.54.0／gh 2.92.0（Windows 11）
+- Vite 8.3／React 19.3／TypeScript 7.0／Vitest 5.1／jsdom 31／React Testing Library 16.3
 - 本機路徑：`C:\Users\liang\projects\pico-search-converter`
 - Remote：尚未建立（D7 已定 GitHub public；M6 建立前須再確認）
 
@@ -75,4 +76,5 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-13：M0 D1–D9 定案；M1 鷹架完成（Vite + React + TS strict + Vitest/jsdom）。
 - 2026-11-13：讀取 spec、完成評估；建立 `Todo.md`、`Progress.md`、`.gitignore`；`git init`（main）並完成首次 commit。
