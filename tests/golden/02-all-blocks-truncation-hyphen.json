@@ -1,0 +1,18 @@
+{
+  "name": "四個概念全部納入：truncation、連字號片語、引號內含 and 的片語、單一詞的概念",
+  "model": {
+    "schemaVersion": "1.0",
+    "searchMode": "explicit_free_text",
+    "blocks": [
+      { "id": "P", "enabled": true, "freeText": ["diabet*", "type 2 diabetes"], "mesh": [], "emtree": [] },
+      { "id": "I", "enabled": true, "freeText": ["SGLT-2 inhibitor", "empagliflozin"], "mesh": [], "emtree": [] },
+      { "id": "C", "enabled": true, "freeText": ["placebo"], "mesh": [], "emtree": [] },
+      { "id": "O", "enabled": true, "freeText": ["mortality", "\"morbidity and mortality\""], "mesh": [], "emtree": [] }
+    ]
+  },
+  "expected": {
+    "pubmed": "(diabet*[tiab] OR \"type 2 diabetes\"[tiab]) AND (\"SGLT-2 inhibitor\"[tiab] OR empagliflozin[tiab]) AND (placebo[tiab]) AND (mortality[tiab] OR \"morbidity and mortality\"[tiab])",
+    "embase-com": "(diabet*:ti,ab,kw OR 'type 2 diabetes':ti,ab,kw) AND ('SGLT-2 inhibitor':ti,ab,kw OR empagliflozin:ti,ab,kw) AND (placebo:ti,ab,kw) AND (mortality:ti,ab,kw OR 'morbidity and mortality':ti,ab,kw)",
+    "ovid-medline": "(diabet*.ti,ab,kf. OR \"type 2 diabetes\".ti,ab,kf.) AND (\"SGLT-2 inhibitor\".ti,ab,kf. OR empagliflozin.ti,ab,kf.) AND (placebo.ti,ab,kf.) AND (mortality.ti,ab,kf. OR \"morbidity and mortality\".ti,ab,kf.)"
+  }
+}

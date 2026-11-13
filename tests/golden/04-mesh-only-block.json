@@ -1,0 +1,22 @@
+{
+  "name": "T14：P 只有 MeSH、沒有 free text → Embase.com 不輸出查詢，另外兩個平台照常",
+  "model": {
+    "schemaVersion": "1.0",
+    "searchMode": "explicit_free_text",
+    "blocks": [
+      {
+        "id": "P",
+        "enabled": true,
+        "freeText": [],
+        "mesh": [{ "term": "Hypertension", "explode": true, "verification": "user_confirmed", "source": "user_input" }],
+        "emtree": []
+      },
+      { "id": "I", "enabled": true, "freeText": ["exercise"], "mesh": [], "emtree": [] }
+    ]
+  },
+  "expected": {
+    "pubmed": "(\"Hypertension\"[MeSH Terms]) AND (exercise[tiab])",
+    "embase-com": null,
+    "ovid-medline": "(exp Hypertension/) AND (exercise.ti,ab,kf.)"
+  }
+}

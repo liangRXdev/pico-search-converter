@@ -59,21 +59,23 @@
 - [x] 通知：C/O 有內容但未啟用（T02）、僅單一 block（T04）、納入 C/O 的敏感度提醒、重複項合併
 - [x] `tests/validation.test.ts`、`tests/buildAst.test.ts`（105 個測試）
 
-### M2 留給 M3 的事項
+### M2 留給 M3 的事項（皆已於 M3 處理）
 
-- Ovid：heading 或片語含 `and`／`or`／`not`（如 `Wounds and Injuries`）時須加引號輸出，否則會被當成 Boolean
-- Ovid：單一詞若為保留字（如 `use`）的處理
-- 最終 query 長度上限（10,000）在 renderer 層檢查
+- Ovid：heading 或片語含保留字時加引號輸出 — 已實作，保留字清單為假設，待 B3 驗證
+- 最終 query 長度上限（10,000）在 renderer 層檢查 — 已實作
 
 ## M3 — Renderers
 
-- [ ] `render/escaping.ts`：三平台引號策略
-- [ ] `render/pubmed.ts`：`[tiab]`、`[MeSH Terms]`／`[MeSH Terms:noexp]`、PubMed URL（T22）
-- [ ] `render/embaseCom.ts`：`:ti,ab,kw`、`/exp`／`/de`；MeSH 不輸出並給 warning；MeSH-only block → blocking error（T12、T13、T14）
-- [ ] `render/ovidMedline.ts`：`.ti,ab,kf.`（per-term）、`exp X/`／`X/`；Emtree 不輸出
-- [ ] 各平台固定 warning（結構轉譯非等價、欄位涵蓋近似、Emtree 需驗證）
-- [ ] `tests/golden/*.json`：§5 golden example + heading、truncation、C/O 啟用案例
-- [ ] `tests/renderers.test.ts`、`tests/validation.test.ts`：T01–T16、T18、T19、T22、T25
+- [x] `render/escaping.ts`：三平台引號策略 + 未驗證值的最後防線（拋錯）
+- [x] `render/shared.ts`：共用 Boolean 組裝、heading 缺口警告、query 長度上限
+- [x] `render/pubmed.ts`：`[tiab]`、`[MeSH Terms]`／`[MeSH Terms:noexp]`、PubMed URL（T22）
+- [x] `render/embaseCom.ts`：`:ti,ab,kw`、`/exp`／`/de`；MeSH 不輸出並給 warning；MeSH-only block → blocking error（T12、T13、T14）
+- [x] `render/ovidMedline.ts`：`.ti,ab,kf.`（per-term）、`exp X/`／`X/`；Emtree 不輸出；保留字加引號
+- [x] `core/generate.ts`：完整 pipeline 入口
+- [x] 各平台固定提示（結構轉譯、Not live-validated、truncation、PubMed 不觸發 ATM、Ovid MeSH 確認）
+- [x] `tests/golden/*.json`：§5 golden、四概念 + truncation + 連字號、heading、MeSH-only
+- [x] `tests/renderers.test.ts`（29 個測試）：T01、T03、T12–T14、T22、T25
+- [x] `docs/live-validation.md`：live 測試包（A 組 11 條 + B 組探測 11 條），**待使用者執行**
 
 ## M4 — 匯出
 
@@ -103,12 +105,11 @@
 
 ## M7 — Live 驗證與發布（依 D8）
 
-- [ ] 產出 live 測試包（golden、MeSH／Emtree heading、`*` truncation、連字號片語、C/O 啟用）— M3 完成即可先做，不必等 UI
-- [ ] PubMed：貼上測試包，記錄日期、query、Search Details、錯誤
-- [ ] Embase.com：同上
-- [ ] Embase.com 加測 `"crohn's disease":ti,ab,kw`（D1 遺留：決定 apostrophe 能否放行）及連字號 term 的實際行為
-- [ ] Ovid MEDLINE：同上（含資料庫版本區段）
-- [ ] 驗證紀錄寫入 `docs/live-validation.md`；未驗證的 target 標「Not live-validated」
+- [x] 產出 live 測試包 `docs/live-validation.md`（2026-11-13）
+- [ ] **使用者**：PubMed 貼上 A 組 + B5，填寫紀錄
+- [ ] **使用者**：Embase.com 貼上 A 組 + B1（apostrophe）、B2（連字號），填寫紀錄
+- [ ] **使用者**：Ovid MEDLINE 貼上 A 組 + B3（保留字）、B4（逗號 heading），填寫紀錄（含資料庫區段名稱）
+- [ ] 依紀錄修正 renderer／驗證規則；通過的平台將 `LIVE_VALIDATED` 改為 `true`
 - [ ] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）
 - [ ] §10 Definition of Done 逐項核對
 - [ ] `/codex-review` 獨立覆審

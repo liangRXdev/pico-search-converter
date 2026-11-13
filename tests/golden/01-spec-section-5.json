@@ -1,0 +1,18 @@
+{
+  "name": "spec §5 golden example：P、I 各兩個詞，O 有內容但未納入",
+  "model": {
+    "schemaVersion": "1.0",
+    "searchMode": "explicit_free_text",
+    "blocks": [
+      { "id": "P", "enabled": true, "freeText": ["hypertension", "\"high blood pressure\""], "mesh": [], "emtree": [] },
+      { "id": "I", "enabled": true, "freeText": ["exercise", "\"physical activity\""], "mesh": [], "emtree": [] },
+      { "id": "C", "enabled": false, "freeText": [], "mesh": [], "emtree": [] },
+      { "id": "O", "enabled": false, "freeText": ["\"blood pressure\""], "mesh": [], "emtree": [] }
+    ]
+  },
+  "expected": {
+    "pubmed": "(hypertension[tiab] OR \"high blood pressure\"[tiab]) AND (exercise[tiab] OR \"physical activity\"[tiab])",
+    "embase-com": "(hypertension:ti,ab,kw OR 'high blood pressure':ti,ab,kw) AND (exercise:ti,ab,kw OR 'physical activity':ti,ab,kw)",
+    "ovid-medline": "(hypertension.ti,ab,kf. OR \"high blood pressure\".ti,ab,kf.) AND (exercise.ti,ab,kf. OR \"physical activity\".ti,ab,kf.)"
+  }
+}

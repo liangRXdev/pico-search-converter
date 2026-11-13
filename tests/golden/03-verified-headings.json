@@ -1,0 +1,28 @@
+{
+  "name": "已確認的 MeSH 與 Emtree：explode 與 non-explode、含逗號的 heading、含 and 的 heading",
+  "model": {
+    "schemaVersion": "1.0",
+    "searchMode": "explicit_free_text",
+    "blocks": [
+      {
+        "id": "P",
+        "enabled": true,
+        "freeText": ["type 2 diabetes"],
+        "mesh": [{ "term": "Diabetes Mellitus, Type 2", "explode": true, "verification": "user_confirmed", "source": "user_input" }],
+        "emtree": [{ "term": "non insulin dependent diabetes mellitus", "explode": true, "verification": "user_confirmed", "source": "user_input" }]
+      },
+      {
+        "id": "I",
+        "enabled": true,
+        "freeText": ["wound*"],
+        "mesh": [{ "term": "Wounds and Injuries", "explode": false, "verification": "user_confirmed", "source": "user_input" }],
+        "emtree": [{ "term": "injury", "explode": false, "verification": "user_confirmed", "source": "user_input" }]
+      }
+    ]
+  },
+  "expected": {
+    "pubmed": "(\"Diabetes Mellitus, Type 2\"[MeSH Terms] OR \"type 2 diabetes\"[tiab]) AND (\"Wounds and Injuries\"[MeSH Terms:noexp] OR wound*[tiab])",
+    "embase-com": "('non insulin dependent diabetes mellitus'/exp OR 'type 2 diabetes':ti,ab,kw) AND ('injury'/de OR wound*:ti,ab,kw)",
+    "ovid-medline": "(exp Diabetes Mellitus, Type 2/ OR \"type 2 diabetes\".ti,ab,kf.) AND (\"Wounds and Injuries\"/ OR wound*.ti,ab,kf.)"
+  }
+}

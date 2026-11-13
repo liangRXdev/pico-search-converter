@@ -4,16 +4,17 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M2 完成，下一步 M3 Renderers**
-- 程式碼：鷹架、型別、config、佔位 App、core（normalize／validate／buildAst）；`typecheck`／`test`（111 個）／`build` 本機通過
-- 阻塞：無
+- 階段：**M3 完成，下一步 M4 匯出；live 測試包已可送驗**
+- 程式碼：鷹架、型別、config、佔位 App、core、三個平台 renderer；`typecheck`／`test`（140 個）／`build` 本機通過
+- 阻塞：無（live 驗證與 M4–M6 可並行；驗證結果可能回頭修改 renderer）
+- 三個平台目前皆為 **Not live-validated**
 
 | Milestone | 狀態 |
 |---|---|
 | M0 決策定案 | 完成（2026-11-13） |
 | M1 鷹架 | 完成（2026-11-13） |
 | M2 Core | 完成（2026-11-13） |
-| M3 Renderers | 未開始 |
+| M3 Renderers | 完成（2026-11-13）；輸出格式未經 live 驗證 |
 | M4 匯出 | 未開始 |
 | M5 UI | 未開始 |
 | M6 CI／部署／文件 | 未開始 |
@@ -79,6 +80,11 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | — | 同名 heading 但 explode 設定不同 → 兩筆都保留 | 擇一會靜默改變檢索範圍 |
 | 2026-11-13 | — | 破折號（en/em dash、minus）正規化為連字號 | 文書軟體自動替換的排版字元，不改變詞義 |
 | 2026-11-13 | — | 每個概念 30 筆上限含 free text + MeSH + Emtree，去重前計算 | spec §6.3 未細分 |
+| 2026-11-13 | — | heading 缺口警告為雙向：Embase 缺 Emtree、PubMed／Ovid 缺 MeSH 都警告 | spec §4.3 只寫 Embase 方向；§7.2 要求跨詞彙庫不得靜默 |
+| 2026-11-13 | — | 只有 Emtree 的概念 → PubMed 與 Ovid 也是 blocking error | spec §4.3 的對稱情況 |
+| 2026-11-13 | — | Ovid：含保留字（and/or/not/adj/use/from/exp/same/with/freq）的 heading 或單一詞加雙引號 | 避免被解析為運算子；**清單為假設**，待 live 測試包 B3 驗證 |
+| 2026-11-13 | — | renderer 對未經 core 驗證的值直接拋錯 | spec §4.3：不得未經驗證就拼進語法分隔符 |
+| 2026-11-13 | — | PubMed 連結由 `buildPubmedUrl` 另外產生，不放進 `Result` | 維持 spec §3.3 的 `Result` 形狀 |
 
 ## 實作注意（踩過的坑）
 
@@ -86,6 +92,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-13：M3 Renderers 完成（三平台 emitter、4 個 golden fixture、29 個測試）；產出 `docs/live-validation.md`。
 - 2026-11-13：M2 Core 完成（normalize／validate／buildAst + 105 個測試）。
 - 2026-11-13：M0 D1–D9 定案；M1 鷹架完成（Vite + React + TS strict + Vitest/jsdom）。
 - 2026-11-13：讀取 spec、完成評估；建立 `Todo.md`、`Progress.md`、`.gitignore`；`git init`（main）並完成首次 commit。
