@@ -10,7 +10,7 @@
 
 | Milestone | 狀態 |
 |---|---|
-| M0 決策定案 | 進行中（6/9） |
+| M0 決策定案 | 進行中（7/9） |
 | M1 鷹架 | 未開始 |
 | M2 Core | 未開始 |
 | M3 Renderers | 未開始 |
@@ -23,7 +23,7 @@
 
 - Node v24.15.0／npm 11.12.1／git 2.54.0／gh 2.92.0（Windows 11）
 - 本機路徑：`C:\Users\liang\projects\pico-search-converter`
-- Remote：尚未建立（待 D7）
+- Remote：尚未建立（D7 已定 GitHub public；M6 建立前須再確認）
 
 ## Spec 評估摘要（2026-11-13）
 
@@ -69,6 +69,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | D4 | 視覺走 `frontend-design`，不沿用 pharmacy-tool-style token | 使用者決定；工具定位偏教學與展示 |
 | 2026-11-13 | D5 | 字型 self-host；拉丁／等寬字 M5 由 frontend-design 選定；中文用系統字型堆疊 | spec §2.3 禁第三方請求；中文 webfont 體積數 MB，教室網路與手機載入慢 |
 | 2026-11-13 | D6 | Vitest + jsdom + RTL，不用 Playwright；T23 靜態檢查 + 手動，T24 部分自動 + 手動 | 靜態小頁不值得 CI 裝瀏覽器；驗證方式須照實揭露 |
+| 2026-11-13 | D7 | GitHub Pages + public repo + MIT | 教學展示需公開網址；CI 同在 GitHub Actions；參考專案皆 MIT。建 remote 前須再確認 |
 
 ## 變更紀錄
 

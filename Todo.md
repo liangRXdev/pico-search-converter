@@ -22,8 +22,8 @@
   - Vitest + jsdom + React Testing Library；v1 不引入 Playwright
   - T17、T20 全自動；T24 自動化 accessible name／語意元素／Tab 可達，screen reader 朗讀列 M7 手動；T23 以 build 產物無外部 URL 的靜態檢查 + M7 手動斷網
   - README 與 Progress.md 須照實註明 T23、T24 為間接驗證 + 手動檢核
-- [ ] **D7 部署與 repo**：GitHub Pages vs Cloudflare Pages；repo 公開與否；License
-  - 建議：GitHub Pages、public repo `pico-search-converter`、MIT
+- [x] **D7 部署與 repo** — 2026-11-13 定案：GitHub Pages + public repo `pico-search-converter` + MIT
+  - Vite `base` = `/pico-search-converter/`；建立 remote 與 push 於 M6 執行前須再向使用者確認一次
 - [ ] **D8 live 驗證資源**：院內是否有 Embase.com 與 Ovid MEDLINE 權限、由誰執行貼上測試
   - 無權限 → 該 target 於 UI 與 README 標示「Not live-validated」（§6.2、§10）
 - [ ] **D9 Generate 行為**：按鈕觸發 vs live preview（§2.1 兩者皆可）
@@ -83,6 +83,7 @@
 
 ## M6 — CI／部署／文件
 
+- [ ] 建立 GitHub public repo 並 push（**執行前先向使用者確認**）
 - [ ] `.github/workflows/ci.yml`：`npm ci → typecheck → test → build`，PR 與 main push
 - [ ] 部署 workflow（依 D7），checks 通過才部署；Vite `base` 設定
 - [ ] T23：build 產物外部請求靜態檢查
