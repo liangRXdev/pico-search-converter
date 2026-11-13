@@ -41,7 +41,7 @@ export interface FreeTextTerm {
   kind: 'freeText';
   /** 已 normalize、已去外層引號、不含結尾 `*` 的字面文字。 */
   value: string;
-  /** true 時各平台必須加引號輸出（含空白、連字號，或使用者明確加引號）。 */
+  /** true 時各平台必須加引號輸出。由 value 決定：含空白或連字號即為 true（D1）。 */
   phrase: boolean;
   trailingTruncation: boolean;
 }
@@ -65,7 +65,10 @@ export type Expr =
   | { kind: 'or'; children: Expr[] }
   | { kind: 'and'; children: Expr[] };
 
-/** 單一 PICO block 的 AST：block 內所有 term 以 OR 連接。 */
+/**
+ * 單一 PICO block 的 AST：block 內所有 term 以 OR 連接。
+ * 順序固定為 mesh → emtree → freeText，各自維持輸入順序。
+ */
 export interface ConceptExpr {
   id: ConceptId;
   terms: TermNode[];

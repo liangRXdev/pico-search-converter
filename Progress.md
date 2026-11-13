@@ -4,15 +4,15 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M1 完成，下一步 M2 Core**
-- 程式碼：鷹架、型別、config、佔位 App；`typecheck`／`test`（6 個）／`build` 本機通過
+- 階段：**M2 完成，下一步 M3 Renderers**
+- 程式碼：鷹架、型別、config、佔位 App、core（normalize／validate／buildAst）；`typecheck`／`test`（111 個）／`build` 本機通過
 - 阻塞：無
 
 | Milestone | 狀態 |
 |---|---|
 | M0 決策定案 | 完成（2026-11-13） |
 | M1 鷹架 | 完成（2026-11-13） |
-| M2 Core | 未開始 |
+| M2 Core | 完成（2026-11-13） |
 | M3 Renderers | 未開始 |
 | M4 匯出 | 未開始 |
 | M5 UI | 未開始 |
@@ -73,8 +73,19 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | D7 | GitHub Pages + public repo + MIT | 教學展示需公開網址；CI 同在 GitHub Actions；參考專案皆 MIT。建 remote 前須再確認 |
 | 2026-11-13 | D8 | 三個 target 皆由使用者 live 驗證（有 Embase.com 與 Ovid MEDLINE 權限） | spec §6.2；可順帶實測 D1 的 apostrophe 與連字號行為 |
 | 2026-11-13 | D9 | live preview 為主 + 保留 Generate；輸入有錯時不保留舊輸出、停用 Copy／匯出 | 即時對照是教學重點；避免複製到與輸入不一致的過期 query |
+| 2026-11-13 | — | 只驗證已啟用的 block；未啟用 block 內的無效輸入不擋輸出 | spec §4.1：inactive block 只保存、不參與輸出 |
+| 2026-11-13 | — | 未勾選「已確認」的 heading 為 blocking error（非靜默略過） | spec §2.2 不得靜默丟棄；§1.3 未驗證的 heading 不得輸出 |
+| 2026-11-13 | — | `*` 的詞幹限純英文字母（`sglt2*`、`beta-block*` 拒絕） | spec §4.1「≥4 letters」；含數字／連字號的詞以片語輸出，片語內不支援 `*` |
+| 2026-11-13 | — | 同名 heading 但 explode 設定不同 → 兩筆都保留 | 擇一會靜默改變檢索範圍 |
+| 2026-11-13 | — | 破折號（en/em dash、minus）正規化為連字號 | 文書軟體自動替換的排版字元，不改變詞義 |
+| 2026-11-13 | — | 每個概念 30 筆上限含 free text + MeSH + Emtree，去重前計算 | spec §6.3 未細分 |
+
+## 實作注意（踩過的坑）
+
+- 原始碼中的不可見或易混淆字元（零寬字元、彎引號、NBSP、U+2028 等）必須寫成 `\uXXXX` escape。字面的 U+2028／U+2029 在 regex literal 內會被視為換行，造成 `Unterminated regular expression`，錯誤訊息只指到該行開頭。
 
 ## 變更紀錄
 
+- 2026-11-13：M2 Core 完成（normalize／validate／buildAst + 105 個測試）。
 - 2026-11-13：M0 D1–D9 定案；M1 鷹架完成（Vite + React + TS strict + Vitest/jsdom）。
 - 2026-11-13：讀取 spec、完成評估；建立 `Todo.md`、`Progress.md`、`.gitignore`；`git init`（main）並完成首次 commit。

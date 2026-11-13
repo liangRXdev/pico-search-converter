@@ -48,15 +48,22 @@
 
 ## M2 — Core（純函式，先寫測試）
 
-- [ ] `core/normalize.ts`：Unicode 空白、CRLF、curly quotes、外層引號剝除、空白摺疊（T18）
-- [ ] `core/validate.ts`
-  - [ ] 字元白名單（依 D1）、長度／數量上限（T19）
-  - [ ] wildcard：僅結尾 `*` 且前方 ≥4 字母（T07、T08、T09）
-  - [ ] 拒絕 Boolean／括號／field tag／proximity／`?` `$` `[]` `/`（T11、T15、T16）
-  - [ ] block 層級：至少一個 enabled block、enabled 不可為空（T05）
-  - [ ] 每個錯誤訊息含修正建議，不靜默丟棄 term
-- [ ] `core/buildAst.ts`：block 內去重（T06）、P→I→C→O 固定順序、`and(or(...))` 結構
-- [ ] 通知產生：C/O 有內容但未啟用（T02）、僅單一 block（T04）
+- [x] `core/codes.ts`：訊息代碼常數
+- [x] `core/normalize.ts`：Unicode 空白、CRLF、curly quotes、零寬字元、破折號→連字號（T18）
+- [x] `core/validate.ts`（`parseFreeText`、`parseHeading`）
+  - [x] 字元白名單（依 D1）、長度上限（T19）
+  - [x] wildcard：僅結尾 `*` 且前方 ≥4 個純字母（T07、T08、T09）
+  - [x] 拒絕 Boolean／括號／field tag／proximity／`?` `$` `#`（T11、T15、T16；D2）
+  - [x] 每個錯誤訊息含修正建議，不靜默丟棄 term
+- [x] `core/buildAst.ts`：block 內去重（T06）、P→I→C→O 固定順序、筆數上限（T19）、空 block／無啟用 block（T05）
+- [x] 通知：C/O 有內容但未啟用（T02）、僅單一 block（T04）、納入 C/O 的敏感度提醒、重複項合併
+- [x] `tests/validation.test.ts`、`tests/buildAst.test.ts`（105 個測試）
+
+### M2 留給 M3 的事項
+
+- Ovid：heading 或片語含 `and`／`or`／`not`（如 `Wounds and Injuries`）時須加引號輸出，否則會被當成 Boolean
+- Ovid：單一詞若為保留字（如 `use`）的處理
+- 最終 query 長度上限（10,000）在 renderer 層檢查
 
 ## M3 — Renderers
 
