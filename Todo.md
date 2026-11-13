@@ -18,8 +18,10 @@
   - 連帶：M5 動 UI 前載入 `frontend-design` skill；warning／「Not live-validated」／MeSH vs Emtree 的視覺層級仍須顯眼（spec §7）
 - [x] **D5 字型** — 2026-11-13 定案：採建議
   - 一律 self-host（`@fontsource`），零第三方請求；英文與 query 等寬字由 `frontend-design` 於 M5 選定（不綁 DM Mono）；中文用系統字型堆疊，不打包中文 webfont
-- [ ] **D6 UI／瀏覽器層測試範圍**：T17、T20、T23、T24 無法只靠純函式單元測試
-  - 建議：Vitest + jsdom 涵蓋 T17/T20/T24（label、鍵盤可達、clipboard mock）；T23 以「build 產物無外部 URL 請求」靜態檢查 + 手動檢核表；v1 不引入 Playwright
+- [x] **D6 UI／瀏覽器層測試範圍** — 2026-11-13 定案：採建議
+  - Vitest + jsdom + React Testing Library；v1 不引入 Playwright
+  - T17、T20 全自動；T24 自動化 accessible name／語意元素／Tab 可達，screen reader 朗讀列 M7 手動；T23 以 build 產物無外部 URL 的靜態檢查 + M7 手動斷網
+  - README 與 Progress.md 須照實註明 T23、T24 為間接驗證 + 手動檢核
 - [ ] **D7 部署與 repo**：GitHub Pages vs Cloudflare Pages；repo 公開與否；License
   - 建議：GitHub Pages、public repo `pico-search-converter`、MIT
 - [ ] **D8 live 驗證資源**：院內是否有 Embase.com 與 Ovid MEDLINE 權限、由誰執行貼上測試
@@ -93,6 +95,7 @@
 - [ ] Embase.com：同上
 - [ ] Ovid MEDLINE：同上（含資料庫版本區段）
 - [ ] 驗證紀錄寫入 `docs/live-validation.md`；未驗證的 target 標「Not live-validated」
+- [ ] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）
 - [ ] §10 Definition of Done 逐項核對
 - [ ] `/codex-review` 獨立覆審
 
