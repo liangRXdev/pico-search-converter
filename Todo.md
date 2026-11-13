@@ -27,8 +27,9 @@
 - [x] **D8 live 驗證資源** — 2026-11-13 定案：使用者有 Embase.com 與 Ovid MEDLINE 權限，三個 target 皆由使用者執行貼上測試
   - M3 完成後產出固定測試包（約 5–6 條 × 3 平台）；結果記入 `docs/live-validation.md`
   - 驗證完成前 UI 仍顯示「Not live-validated」，逐 target 通過後才移除
-- [ ] **D9 Generate 行為**：按鈕觸發 vs live preview（§2.1 兩者皆可）
-  - 建議：輸入合法時 live preview，保留 Generate 按鈕作為鍵盤／教學流程的明確動作
+- [x] **D9 Generate 行為** — 2026-11-13 定案：採建議
+  - live preview（debounce 約 300 ms）為主；Generate 按鈕保留，立即驗證並移動焦點至輸出區或第一個錯誤
+  - 輸入有錯時**不保留舊輸出**：輸出卡顯示錯誤狀態，Copy／匯出停用
 
 ### 已自行定案的小缺口（實作時照此處理，不另詢問）
 
@@ -77,6 +78,7 @@
 - [ ] Advanced 面板：MeSH／Emtree 分開輸入、explode 開關、「我已確認」勾選、MeSH Browser／Embase help 連結
 - [ ] 三平台輸出卡：平台全名標示（`Embase.com (Elsevier)，非 Ovid Embase`）、Copy、per-platform warnings、live 驗證狀態標章
 - [ ] Copy（僅 query）+ fallback、Copy all、TXT 下載、Reset、內建範例（T20）
+- [ ] live preview（debounce）+ Generate 按鈕焦點管理；輸入有錯時清空輸出並停用 Copy／匯出（D9）
 - [ ] inline validation 訊息、勿輸入病患識別資訊提醒、§7 guardrail 文案
 - [ ] 使用者輸入只經 JSX 文字節點渲染，無 `dangerouslySetInnerHTML`（T17）
 - [ ] mobile-first；長 query 只在 code panel 內捲動

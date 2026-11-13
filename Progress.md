@@ -4,13 +4,13 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M0 — 規劃完成，等待 D1–D9 定案**
+- 階段：**M0 — D1–D9 全數定案，待使用者確認需求摘要後進 M1**
 - 程式碼：尚未開始（無 `package.json`、無 `src/`）
-- 阻塞：`Todo.md` M0 的 9 項決策
+- 阻塞：需求摘要確認
 
 | Milestone | 狀態 |
 |---|---|
-| M0 決策定案 | 進行中（8/9） |
+| M0 決策定案 | 決策 9/9 完成；待使用者確認需求摘要 |
 | M1 鷹架 | 未開始 |
 | M2 Core | 未開始 |
 | M3 Renderers | 未開始 |
@@ -71,6 +71,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | D6 | Vitest + jsdom + RTL，不用 Playwright；T23 靜態檢查 + 手動，T24 部分自動 + 手動 | 靜態小頁不值得 CI 裝瀏覽器；驗證方式須照實揭露 |
 | 2026-11-13 | D7 | GitHub Pages + public repo + MIT | 教學展示需公開網址；CI 同在 GitHub Actions；參考專案皆 MIT。建 remote 前須再確認 |
 | 2026-11-13 | D8 | 三個 target 皆由使用者 live 驗證（有 Embase.com 與 Ovid MEDLINE 權限） | spec §6.2；可順帶實測 D1 的 apostrophe 與連字號行為 |
+| 2026-11-13 | D9 | live preview 為主 + 保留 Generate；輸入有錯時不保留舊輸出、停用 Copy／匯出 | 即時對照是教學重點；避免複製到與輸入不一致的過期 query |
 
 ## 變更紀錄
 
