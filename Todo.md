@@ -85,15 +85,19 @@
 
 ## M5 — UI（D3–D5、D9 定案後）
 
-- [ ] P/I/C/O 四面板：一行一 term、include 開關（預設 P+I ON）、未納入提示
-- [ ] Advanced 面板：MeSH／Emtree 分開輸入、explode 開關、「我已確認」勾選、MeSH Browser／Embase help 連結
-- [ ] 三平台輸出卡：平台全名標示（`Embase.com (Elsevier)，非 Ovid Embase`）、Copy、per-platform warnings、live 驗證狀態標章
-- [ ] Copy（僅 query）+ fallback、Copy all、TXT 下載、Reset、內建範例（T20）
-- [ ] live preview（debounce）+ Generate 按鈕焦點管理；輸入有錯時清空輸出並停用 Copy／匯出（D9）
-- [ ] inline validation 訊息、勿輸入病患識別資訊提醒、§7 guardrail 文案
-- [ ] 使用者輸入只經 JSX 文字節點渲染，無 `dangerouslySetInnerHTML`（T17）
-- [ ] mobile-first；長 query 只在 code panel 內捲動
-- [ ] `tests/ui.test.ts`：T17、T20、T24
+- [x] P/I/C/O 四面板：一行一 term、include 開關（預設 P+I ON）、未納入提示
+- [x] Advanced 面板：MeSH／Emtree 分開輸入、explode 開關、「我已查證」勾選、MeSH Browser／Embase help 連結
+- [x] 三平台輸出：平台全名與介面說明、Copy、per-platform warnings、「尚未實機驗證」標章
+- [x] 輸出分色顯示（`QueryView`）：詞依 P/I/C/O 分色、平台語法灰底；DOM 文字與 query 逐字相同
+- [x] Copy（僅 query）+ execCommand fallback、Copy all、TXT 下載、清空、載入範例（T20）
+- [x] live preview（debounce）+ 產生查詢按鈕焦點管理；輸入有錯或更新中時不顯示舊輸出並停用 Copy／匯出（D9）
+- [x] inline validation 訊息（含行號）、勿輸入病患識別資訊提醒、§7 guardrail 文案、貼上後的查核步驟
+- [x] 使用者輸入只經 JSX 文字節點渲染，無 `dangerouslySetInnerHTML`（T17）
+- [x] mobile-first CSS；長 query 只在 code panel 內換行／捲動
+- [x] 字型：IBM Plex Mono（latin 400／600，self-host，OFL-1.1）；中文用系統字型
+- [x] `tests/ui.test.tsx`（22 個測試）：T02、T03、T12、T14、T17、T20、T21、T24
+- [x] 真實 Chrome 檢查（production build）：query 正確、字型載入、雙欄版面、無橫向溢出、無 console error、只有同源請求
+- [ ] **目視檢查未完成**：截圖工具逾時，版面只用 JS 量測驗證；手機寬度未實測。待使用者目視或 M7 補做
 
 ## M6 — CI／部署／文件
 
