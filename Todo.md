@@ -12,8 +12,8 @@
   - 查證結果（2026-11-13，Elsevier support 三頁）：**無** apostrophe escape 的官方記載；有記載片語可用單或雙引號；連字號的 tokenization 未記載。→ `'...'` 內含 apostrophe 無法保證安全，雙引號包覆屬未測試推論，需 live 測試才能放行
 - [x] **D2 片語內 Boolean 字詞** — 2026-11-13 定案：採建議（明確加引號才接受，不分大小寫）（§2.1 步驟 2「含空白 → 自動片語」與 §4.1／T11「raw AND 拒絕」衝突，`signs and symptoms` 無解）
   - 建議：使用者**明確加引號**才接受含 and/or/not 的片語；未加引號一律拒絕並提示加引號（不分大小寫）
-- [ ] **D3 UI 技術**：vanilla TS（spec §3.1 結構）vs React
-  - 建議：vanilla TS + `textContent` 渲染，符合 §8「small frontend footprint」
+- [x] **D3 UI 技術** — 2026-11-13 定案：**React**（推翻建議；與既有專案一致）
+  - 連帶：`src/main.tsx` + `src/ui/*.tsx`；props 定義 interface、不用 `any`；CSS 採 BEM；禁用 `dangerouslySetInnerHTML`（T17）；`src/core`、`src/render` 維持與 React 無關的純函式
 - [ ] **D4 視覺路由**（CLAUDE.md §9）：`pharmacy-tool-style` vs `frontend-design`
   - 建議：`pharmacy-tool-style`（查詢站性質，沿用既有 token）
 - [ ] **D5 字型載入**：Noto Sans TC + DM Mono 若走 Google Fonts CDN，牴觸 §2.3「無外部請求」精神與 T23
@@ -37,7 +37,7 @@
 
 ## M1 — 專案鷹架
 
-- [ ] Vite + TypeScript（strict）+ Vitest 初始化；`npm run typecheck / test / build`
+- [ ] Vite + React + TypeScript（strict）+ Vitest 初始化；`npm run typecheck / test / build`
 - [ ] 目錄結構依 §3.1；`src/model/types.ts`（ConceptId、TermNode、Expr、Result、Warning）
 - [ ] `src/config.ts`：輸入上限與 warning code 常數
 
@@ -75,7 +75,7 @@
 - [ ] 三平台輸出卡：平台全名標示（`Embase.com (Elsevier)，非 Ovid Embase`）、Copy、per-platform warnings、live 驗證狀態標章
 - [ ] Copy（僅 query）+ fallback、Copy all、TXT 下載、Reset、內建範例（T20）
 - [ ] inline validation 訊息、勿輸入病患識別資訊提醒、§7 guardrail 文案
-- [ ] 全程 `textContent`，無 `innerHTML`（T17）
+- [ ] 使用者輸入只經 JSX 文字節點渲染，無 `dangerouslySetInnerHTML`（T17）
 - [ ] mobile-first；長 query 只在 code panel 內捲動
 - [ ] `tests/ui.test.ts`：T17、T20、T24
 
