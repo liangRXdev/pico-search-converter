@@ -6,6 +6,8 @@
 - **Embase.com**（Elsevier 介面；**不是** Ovid Embase）
 - **Ovid MEDLINE**（Wolters Kluwer／Ovid 介面）
 
+**線上使用：<https://liangrxdev.github.io/pico-search-converter/>**
+
 純前端工具，免安裝、免登入。所有運算都在瀏覽器內完成，不會上傳任何輸入內容。
 
 > **這是語法轉譯工具，不是檢索策略產生器。** 三組輸出的括號與 Boolean 結構相同，但各平台的欄位涵蓋範圍只是近似、收錄內容不同，MeSH 與 Emtree 也不是一對一對應，命中筆數不會相同。輸出不代表系統性文獻回顧等級的完整檢索。

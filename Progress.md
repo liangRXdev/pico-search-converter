@@ -4,11 +4,13 @@
 
 ## 現況（2026-11-13）
 
-- 階段：**M6 本機部分完成；待使用者確認後建立 GitHub repo 並部署。live 測試包待使用者執行**
+- 階段：**M6 完成，已上線；下一步 M7（live 驗證由使用者執行）**
+- 線上網址：https://liangrxdev.github.io/pico-search-converter/
+- Repo：https://github.com/liangRXdev/pico-search-converter（public）
 - 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（166 個）／`build` 本機通過
 - build 產物：JS 252 kB（gzip 81 kB）、CSS 8.8 kB、字型 woff2 兩個各約 15 kB
 - 阻塞：無
-- 未完成的驗證：手機寬度未實測；CI 尚未在 GitHub 上實際跑過
+- 未完成的驗證：三個平台的 live 驗證；手機寬度；線上版的真實瀏覽器操作、斷網測試（T23）、螢幕閱讀器（T24）
 - 三個平台目前皆為 **Not live-validated**
 
 | Milestone | 狀態 |
@@ -19,7 +21,7 @@
 | M3 Renderers | 完成（2026-11-13）；輸出格式未經 live 驗證 |
 | M4 匯出 | 完成（2026-11-13） |
 | M5 UI | 完成（2026-11-13）；使用者目視通過 |
-| M6 CI／部署／文件 | 本機部分完成；remote／部署待確認 |
+| M6 CI／部署／文件 | 完成（2026-11-13）；CI 與 Pages 部署通過 |
 | M7 Live 驗證與發布 | 未開始 |
 
 ## 環境
@@ -27,7 +29,7 @@
 - Node v24.15.0／npm 11.12.1／git 2.54.0／gh 2.92.0（Windows 11）
 - Vite 8.3／React 19.3／TypeScript 7.0／Vitest 5.1／jsdom 31／React Testing Library 16.3
 - 本機路徑：`C:\Users\liang\projects\pico-search-converter`
-- Remote：尚未建立（D7 已定 GitHub public；M6 建立前須再確認）
+- Remote：origin = github.com/liangRXdev/pico-search-converter；push 到 main 即自動部署
 
 ## Spec 評估摘要（2026-11-13）
 
@@ -102,6 +104,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-13：建立 public repo、啟用 Pages、首次 CI 與部署通過，網站上線。
 - 2026-11-13：使用者確認 M5 通過；M6 本機部分完成（CI workflow、離線檢查、README、LICENSE）。
 - 2026-11-13：M4 匯出與 M5 UI 完成（React 元件、分色輸出、TXT 匯出、32 個新測試）。
 - 2026-11-13：M3 Renderers 完成（三平台 emitter、4 個 golden fixture、29 個測試）；產出 `docs/live-validation.md`。

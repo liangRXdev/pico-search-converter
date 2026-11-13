@@ -106,10 +106,11 @@
 - [x] T23：`scripts/check-offline.mjs` 靜態檢查 build 產物（無外部資源、無網路 API、外部主機白名單）；已關閉 Vite modulepreload polyfill 以移除 bundle 內唯一的 fetch
 - [x] `README.md`：支援／不支援語法、驗證狀態、測試限制、來源連結
 - [x] `LICENSE`（MIT）
-- [ ] 建立 GitHub public repo 並 push（**執行前先向使用者確認**）
-- [ ] repo 設定：Pages source 設為 GitHub Actions
-- [ ] 確認 CI 在 GitHub 上通過、Pages 網址可開啟
-- [ ] README 補上線上網址
+- [x] 建立 GitHub public repo 並 push（使用者 2026-11-13 確認後執行）
+- [x] repo 設定：Pages source 設為 GitHub Actions
+- [x] CI 首次執行通過（check + deploy）；線上頁面與 JS／CSS 皆回 200
+- [x] README 補上線上網址
+- [ ] 線上版在真實瀏覽器開啟並操作一次（目前只以 HTTP 200 確認，列入 M7）
 
 ## M7 — Live 驗證與發布（依 D8）
 
