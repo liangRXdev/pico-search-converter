@@ -24,8 +24,9 @@
   - README 與 Progress.md 須照實註明 T23、T24 為間接驗證 + 手動檢核
 - [x] **D7 部署與 repo** — 2026-11-13 定案：GitHub Pages + public repo `pico-search-converter` + MIT
   - Vite `base` = `/pico-search-converter/`；建立 remote 與 push 於 M6 執行前須再向使用者確認一次
-- [ ] **D8 live 驗證資源**：院內是否有 Embase.com 與 Ovid MEDLINE 權限、由誰執行貼上測試
-  - 無權限 → 該 target 於 UI 與 README 標示「Not live-validated」（§6.2、§10）
+- [x] **D8 live 驗證資源** — 2026-11-13 定案：使用者有 Embase.com 與 Ovid MEDLINE 權限，三個 target 皆由使用者執行貼上測試
+  - M3 完成後產出固定測試包（約 5–6 條 × 3 平台）；結果記入 `docs/live-validation.md`
+  - 驗證完成前 UI 仍顯示「Not live-validated」，逐 target 通過後才移除
 - [ ] **D9 Generate 行為**：按鈕觸發 vs live preview（§2.1 兩者皆可）
   - 建議：輸入合法時 live preview，保留 Generate 按鈕作為鍵盤／教學流程的明確動作
 
@@ -92,8 +93,10 @@
 
 ## M7 — Live 驗證與發布（依 D8）
 
-- [ ] PubMed：貼上 golden + heading + truncation 案例，記錄日期、query、Search Details、錯誤
+- [ ] 產出 live 測試包（golden、MeSH／Emtree heading、`*` truncation、連字號片語、C/O 啟用）— M3 完成即可先做，不必等 UI
+- [ ] PubMed：貼上測試包，記錄日期、query、Search Details、錯誤
 - [ ] Embase.com：同上
+- [ ] Embase.com 加測 `"crohn's disease":ti,ab,kw`（D1 遺留：決定 apostrophe 能否放行）及連字號 term 的實際行為
 - [ ] Ovid MEDLINE：同上（含資料庫版本區段）
 - [ ] 驗證紀錄寫入 `docs/live-validation.md`；未驗證的 target 標「Not live-validated」
 - [ ] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）

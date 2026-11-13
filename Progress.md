@@ -10,7 +10,7 @@
 
 | Milestone | 狀態 |
 |---|---|
-| M0 決策定案 | 進行中（7/9） |
+| M0 決策定案 | 進行中（8/9） |
 | M1 鷹架 | 未開始 |
 | M2 Core | 未開始 |
 | M3 Renderers | 未開始 |
@@ -46,7 +46,7 @@
 
 | 風險 | 影響 | 對策 |
 |---|---|---|
-| Embase.com／Ovid 無院內權限做 live 驗證 | 只能以 unverified 發布 | D8；UI 標章機制在 M5 就做進去 |
+| live 驗證發現語法錯誤 | 需回頭改 renderer | D8 已確認三個 target 皆可驗；測試包在 M3 完成後即送驗，不等 UI |
 | 欄位對應（`[tiab]`／`:ti,ab,kw`／`.ti,ab,kf.`）被使用者誤認為等價 | 教學誤導 | 每張輸出卡固定顯示近似性 warning，不可關閉 |
 | 字元政策過嚴導致常見疾病名被拒 | 課堂體驗差 | D1 查證 escape 規則後盡量放行，錯誤訊息附改寫建議 |
 | vendor 語法改版 | 輸出失效 | README 記錄查證日期與來源；golden fixture 集中管理 |
@@ -70,6 +70,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 | 2026-11-13 | D5 | 字型 self-host；拉丁／等寬字 M5 由 frontend-design 選定；中文用系統字型堆疊 | spec §2.3 禁第三方請求；中文 webfont 體積數 MB，教室網路與手機載入慢 |
 | 2026-11-13 | D6 | Vitest + jsdom + RTL，不用 Playwright；T23 靜態檢查 + 手動，T24 部分自動 + 手動 | 靜態小頁不值得 CI 裝瀏覽器；驗證方式須照實揭露 |
 | 2026-11-13 | D7 | GitHub Pages + public repo + MIT | 教學展示需公開網址；CI 同在 GitHub Actions；參考專案皆 MIT。建 remote 前須再確認 |
+| 2026-11-13 | D8 | 三個 target 皆由使用者 live 驗證（有 Embase.com 與 Ovid MEDLINE 權限） | spec §6.2；可順帶實測 D1 的 apostrophe 與連字號行為 |
 
 ## 變更紀錄
 
