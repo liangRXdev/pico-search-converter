@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import livePack from '../docs/live-validation.md?raw';
-import { LIMITS, PLATFORM_ORDER, PUBMED_SEARCH_URL } from '../src/config';
+import { LIMITS, PLATFORM_LABELS, PLATFORM_ORDER, PUBMED_SEARCH_URL } from '../src/config';
 import { CODES } from '../src/core/codes';
 import { generate } from '../src/core/generate';
 import type {
@@ -44,6 +44,29 @@ function run(blocks: BlockInput[]): Record<Platform, Result> {
   >;
 }
 
+/**
+ * 解析 docs/live-validation.md 的 A 組：每個「來源：`tests/golden/x.json`」區段內，
+ * `**平台名稱**` 到下一個 `**` 標題之間的 text code block。回傳 fixture 路徑 → 平台名稱 → 區塊內容。
+ */
+function parseLivePack(markdown: string): Map<string, Map<string, string[]>> {
+  const result = new Map<string, Map<string, string[]>>();
+  const groupA = markdown.split(/^## B\./m)[0] ?? '';
+  for (const section of groupA.split(/^### /m).slice(1)) {
+    const source = /^來源：`([^`]+)`/m.exec(section)?.[1];
+    if (!source) continue;
+    const platforms = new Map<string, string[]>();
+    const headings = [...section.matchAll(/^\*\*([^*]+)\*\*/gm)];
+    headings.forEach((heading, index) => {
+      const end = headings[index + 1]?.index ?? section.length;
+      const body = section.slice(heading.index, end);
+      const blocks = [...body.matchAll(/```text\n([\s\S]*?)\n```/g)].map((m) => m[1] ?? '');
+      platforms.set(heading[1] ?? '', blocks);
+    });
+    result.set(source, platforms);
+  }
+  return result;
+}
+
 function codesOf(result: Result): string[] {
   return result.warnings.map((warning) => warning.code);
 }
@@ -63,10 +86,18 @@ describe('golden fixtures（spec §5、T01、T03、T07、T10）', () => {
     }
   });
 
-  it('live 驗證包內的 query 與 fixture 逐字一致（送驗的就是測試比對的字串）', () => {
-    for (const [, fixture] of fixtures) {
-      for (const query of Object.values(fixture.expected)) {
-        if (query !== null) expect(livePack).toContain(`\n${query}\n`);
+  it('live 驗證包：每個 fixture × 平台區段內的 query 與 fixture 逐字一致（送驗的就是測試比對的字串）', () => {
+    const packed = parseLivePack(livePack);
+    const sources = fixtures.map(([path]) => path.replace('./', 'tests/'));
+    expect([...packed.keys()].sort()).toEqual([...sources].sort());
+    for (const [path, fixture] of fixtures) {
+      const sections = packed.get(path.replace('./', 'tests/'));
+      for (const platform of PLATFORM_ORDER) {
+        const where = `${fixture.name} / ${platform}`;
+        const blocks = sections?.get(PLATFORM_LABELS[platform]);
+        expect(blocks, `${where}：缺少平台區段`).toBeDefined();
+        const expected = fixture.expected[platform];
+        expect(blocks, where).toEqual(expected === null ? [] : [expected]);
       }
     }
   });

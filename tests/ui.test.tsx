@@ -129,6 +129,27 @@ describe('live preview 等待期間（D9，正式 debounce 300 ms）', () => {
   });
 });
 
+describe('畫面上的分色 query 與複製字串一致（QueryView vs joinGroups）', () => {
+  // 兩條組裝路徑各自實作括號與 AND／OR；這裡比對的是兩者彼此一致，期望值刻意取自 renderer。
+  it('四個概念、片語內大寫 AND、截字、連字號：三個平台的 DOM 文字都等於 result.query', async () => {
+    const { user, writeText } = setup();
+    fireEvent.change(terms('P'), { target: { value: 'diabet*\n"Signs AND Symptoms"\nSGLT-2' } });
+    fireEvent.change(terms('C'), { target: { value: 'placebo' } });
+    fireEvent.change(terms('O'), { target: { value: 'mortality\n"morbidity and mortality"' } });
+    await user.click(screen.getByRole('checkbox', { name: '納入檢索（C）' }));
+    await user.click(screen.getByRole('checkbox', { name: '納入檢索（O）' }));
+    await settle();
+    for (const platform of PLATFORM_ORDER) {
+      const shown = queryText(platform);
+      expect(shown, platform).toContain('Signs AND Symptoms');
+      await user.click(
+        within(card(platform)).getByRole('button', { name: `複製 ${PLATFORM_LABELS[platform]} 查詢` }),
+      );
+      expect(writeText).toHaveBeenLastCalledWith(shown);
+    }
+  });
+});
+
 describe('複製與匯出（T20、T21）', () => {
   it('T20：複製按鈕只寫入 query 本身', async () => {
     const { user, writeText } = setup();
@@ -173,6 +194,50 @@ describe('複製與匯出（T20、T21）', () => {
       '複製 PubMed 查詢',
     );
     expect(screen.getByRole('status')).toHaveTextContent('輸入已變更');
+  });
+
+  describe('execCommand 退路成功時：複製的是 query 本身、選取完整、用完即移除', () => {
+    function fallbackSpy() {
+      const seen: { value: string; selected: string; readonly: boolean }[] = [];
+      document.execCommand = vi.fn(() => {
+        const area = document.querySelector<HTMLTextAreaElement>('body > textarea');
+        if (!area) return false;
+        seen.push({
+          value: area.value,
+          selected: area.value.slice(area.selectionStart, area.selectionEnd),
+          readonly: area.hasAttribute('readonly'),
+        });
+        return true;
+      });
+      return seen;
+    }
+
+    async function expectFallbackCopied(user: ReturnType<typeof userEvent.setup>) {
+      const seen = fallbackSpy();
+      await user.click(within(card('pubmed')).getByRole('button', { name: /複製 PubMed/ }));
+      expect(document.execCommand).toHaveBeenCalledWith('copy');
+      expect(seen).toEqual([{ value: GOLDEN.pubmed, selected: GOLDEN.pubmed, readonly: true }]);
+      expect(document.querySelector('body > textarea')).toBeNull();
+      expect(screen.getByRole('status')).toHaveTextContent('已複製 PubMed 查詢');
+      expect(within(card('pubmed')).getByRole('button', { name: '已複製' })).toBeInTheDocument();
+    }
+
+    it('Clipboard API 拒絕', async () => {
+      const { user, writeText } = setup();
+      writeText.mockRejectedValue(new Error('denied'));
+      await expectFallbackCopied(user);
+    });
+
+    it('沒有 Clipboard API（非安全來源）', async () => {
+      const { user } = setup();
+      const original = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
+      Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+      try {
+        await expectFallbackCopied(user);
+      } finally {
+        if (original) Object.defineProperty(navigator, 'clipboard', original);
+      }
+    });
   });
 
   it('剪貼簿失敗時告知使用者，不假裝成功', async () => {

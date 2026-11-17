@@ -4,15 +4,15 @@
 
 ## 現況（2026-11-17）
 
-- 階段：**M7 進行中：三平台 live 驗證通過；Codex 覆審 C1、C2、C3、C4、T2 已修；T1 與 Low 項、手動檢核待做**
+- 階段：**M7 進行中：三平台 live 驗證通過；Codex 覆審 10 項全部處理完畢；剩手動檢核（手機寬度、斷網、螢幕閱讀器）與 §10 DoD 核對**
 - 線上網址：https://liangrxdev.github.io/pico-search-converter/
 - Repo：https://github.com/liangRXdev/pico-search-converter（public）
-- 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（179 個）／`build` 本機通過
+- 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（198 個）／`build` 本機通過
 - build 產物：JS 252 kB（gzip 81 kB）、CSS 8.8 kB、字型 woff2 兩個各約 15 kB
 - 阻塞：無
 - 未完成的驗證：手機寬度；線上版的真實瀏覽器操作、斷網測試（T23）、螢幕閱讀器（T24）
 - 三個平台皆已 **live-validated**（2026-11-17，使用者執行，紀錄見 `docs/live-validation.md`）
-- Codex 覆審（`.ai-review/verdict.md`）：接受 7／部分接受 3／拒絕 0；C1、C2、C3、C4、T2 已修，T1、T3、T4、C5、D1 待做
+- Codex 覆審（`.ai-review/verdict.md`）：接受 7／部分接受 3／拒絕 0；全部已處理（2026-11-17）
 
 | Milestone | 狀態 |
 |---|---|
@@ -110,6 +110,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-17：修正覆審 T1（離線檢查規則模組化＋反例測試）、T3、T4、C5、D1；補 Ovid 區段名稱。
 - 2026-11-17：三平台 live 驗證通過；修正覆審 C1（Ovid 保留字截字遺失）、C2（heading 改名沿用查證）、C3（複製回饋綁定 query）、C4（heading 錯誤焦點）、T2（D9 等待期間測試）。
 - 2026-11-13：建立 public repo、啟用 Pages、首次 CI 與部署通過，網站上線。
 - 2026-11-13：使用者確認 M5 通過；M6 本機部分完成（CI workflow、離線檢查、README、LICENSE）。

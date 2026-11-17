@@ -14,7 +14,7 @@
 
 - PubMed：執行日期＿2026/11/17＿＿＿
 - Embase.com：執行日期＿2026/11/17＿，確認網址為 embase.com（不是 Ovid 平台上的 Embase）
-- Ovid MEDLINE：執行日期＿2026/11/17＿，資料庫區段名稱（如 Ovid MEDLINE(R) ALL 1946 to ...）＿＿＿＿
+- Ovid MEDLINE：執行日期＿2026/11/17＿，資料庫區段名稱（如 Ovid MEDLINE(R) ALL 1946 to ...）＿1946 to November 13, 2026＿
 
 ## A. Golden fixtures
 
@@ -268,4 +268,3 @@ exp Diabetes Mellitus, Type 2/
 - **B3**：`exp "Wounds and Injuries"/` 正確對應；未加引號被拆成 `exp Wounds/ and Injuries/`；未加引號的 `use.ti,ab,kf.` 無法搜尋且**沒有錯誤訊息** → 保留字加引號的規則屬實，且必要。
 - **B4、B5**：符合預期。
 - **獨立覆審發現（`.ai-review/verdict.md` C1）**：A 組未涵蓋「保留字加截字」。原實作會輸出 `"freq".ti,ab,kf.`（截字遺失）。已改為對 Ovid target 回傳 blocking error，其他平台照常；此路徑的 Ovid 寫法未經 live 驗證，因此不輸出。
-- 待補：Ovid 資料庫區段名稱。

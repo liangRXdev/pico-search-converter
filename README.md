@@ -74,7 +74,7 @@
 
 ## 開發
 
-需要 Node.js 22 以上。
+需要 Node.js 22.22.2 以上的 22.x、24.15.0 以上的 24.x，或 26 以上（與測試依賴 jsdom 的需求一致；CI 使用 Node 24）。
 
 ```bash
 npm ci
@@ -82,7 +82,7 @@ npm run dev            # 本機開發
 npm run typecheck
 npm test
 npm run build
-npm run check:offline  # 檢查 build 產物沒有外部請求（需先 build）
+npm run check:offline  # 靜態檢查 build 產物的外部資源與網路 API（需先 build）
 ```
 
 架構：`UI → normalize + validate → AST → 各平台 emitter`。`src/core` 與 `src/render` 是不依賴 React 的純函式；`tests/golden/*.json` 是固定的輸入與預期輸出。
@@ -91,7 +91,7 @@ npm run check:offline  # 檢查 build 產物沒有外部請求（需先 build）
 
 規格（`spec.md` §6.1）的 T01–T25 中，以下兩項不是真實瀏覽器的自動化測試：
 
-- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——頁面只載入同源資源，程式碼不含 `fetch`、`XMLHttpRequest` 等網路 API。真實瀏覽器的斷網操作需手動執行。
+- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——HTML／CSS 只載入同源資源；JS 不含 `fetch`、`XMLHttpRequest`、`new Image`、動態 `import()` 等已知網路 API 字串，外部網址只能是允許清單內的導覽連結，不能出現在 `src`／`href` 等資源載入寫法中（規則與反例測試見 `scripts/offline-rules.mjs`、`tests/check-offline.test.ts`）。這是字串樣式比對，無法證明執行期沒有網路請求；真實瀏覽器的斷網操作需手動執行。
 - **T24（鍵盤與螢幕閱讀器）**：自動化測試涵蓋控制項的可辨識名稱、原生語意元素、Tab 可達與鍵盤觸發；螢幕閱讀器的實際朗讀需手動檢查。
 
 自動化測試驗證的是「本工具是否依規則產生字串」，不是各資料庫是否接受這些字串，後者見上方的驗證狀態。
