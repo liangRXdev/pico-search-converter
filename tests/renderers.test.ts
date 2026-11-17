@@ -202,6 +202,43 @@ describe('Ovid 保留字', () => {
     expect(results['ovid-medline'].query).toBe('("use".ti,ab,kf. OR usage.ti,ab,kf.)');
     expect(results.pubmed.query).toBe('(use[tiab] OR usage[tiab])');
   });
+
+  it.each(['freq*', 'with*', 'from*', 'same*', 'Freq*'])(
+    '保留字加截字（%s）：Ovid 擋下並說明，不得輸出去掉 * 的完整詞',
+    (input) => {
+      const results = run([block('P', [input, 'exercise']), block('I', ['placebo'])]);
+      const ovid = results['ovid-medline'];
+      expect(ovid.query).toBeNull();
+      expect(ovid.groups).toEqual([]);
+      expect(codesOf(ovid)).toContain(CODES.OVID_RESERVED_TRUNCATION);
+      const error = ovid.warnings.find((w) => w.code === CODES.OVID_RESERVED_TRUNCATION);
+      expect(error?.severity).toBe('error');
+      expect(error?.message).toContain(input);
+      expect(error?.message).toContain('P');
+      // 其他平台照常輸出且保留截字
+      const stem = input.slice(0, -1);
+      expect(results.pubmed.query).toBe(`(${stem}*[tiab] OR exercise[tiab]) AND (placebo[tiab])`);
+      expect(results['embase-com'].query).toContain(`${stem}*:ti,ab,kw`);
+    },
+  );
+
+  it('保留字不加截字、或非保留字加截字，Ovid 照常輸出', () => {
+    const results = run([block('P', ['with', 'withdraw*', 'frequen*'])]);
+    expect(results['ovid-medline'].query).toBe(
+      '("with".ti,ab,kf. OR withdraw*.ti,ab,kf. OR frequen*.ti,ab,kf.)',
+    );
+  });
+
+  it('直接呼叫 Ovid renderer（不經 generate）也擋下保留字截字', () => {
+    const ast: QueryAst = {
+      concepts: [
+        { id: 'P', terms: [{ kind: 'freeText', value: 'freq', phrase: false, trailingTruncation: true }] },
+      ],
+    };
+    const result = renderOvidMedline(ast);
+    expect(result.query).toBeNull();
+    expect(codesOf(result)).toContain(CODES.OVID_RESERVED_TRUNCATION);
+  });
 });
 
 describe('各平台固定提示', () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LIVE_VALIDATED, PLATFORM_LABELS } from '../config';
 import { CODES } from '../core/codes';
 import type { Platform, Result } from '../model/types';
@@ -37,19 +37,32 @@ const COPIED_MS = 2000;
 export function OutputCard({ platform, state, result, onStatus }: OutputCardProps) {
   const label = PLATFORM_LABELS[platform];
   const query = state === 'ready' ? (result?.query ?? null) : null;
-  const [copied, setCopied] = useState(false);
+  // 記錄「實際複製成功的 query」而非布林：輸入變更後，新 query 不得沿用舊的成功回饋（D9）
+  const [copiedQuery, setCopiedQuery] = useState<string | null>(null);
+  const copied = copiedQuery !== null && copiedQuery === query;
+  const latestQuery = useRef(query);
+  latestQuery.current = query;
 
   useEffect(() => {
-    if (!copied) return undefined;
-    const timer = setTimeout(() => setCopied(false), COPIED_MS);
+    if (copiedQuery === null) return undefined;
+    const timer = setTimeout(() => setCopiedQuery(null), COPIED_MS);
     return () => clearTimeout(timer);
-  }, [copied]);
+  }, [copiedQuery]);
 
   const copy = async () => {
     if (query === null) return;
-    const ok = await copyText(query);
-    setCopied(ok);
-    onStatus(ok ? `已複製 ${label} 查詢` : `無法複製 ${label} 查詢，請手動選取查詢文字後複製`);
+    const target = query;
+    const ok = await copyText(target);
+    if (!ok) {
+      onStatus(`無法複製 ${label} 查詢，請手動選取查詢文字後複製`);
+      return;
+    }
+    setCopiedQuery(target);
+    onStatus(
+      latestQuery.current === target
+        ? `已複製 ${label} 查詢`
+        : `已複製先前的 ${label} 查詢，但輸入已變更，請重新複製`,
+    );
   };
 
   const notes = state === 'ready' && result ? result.warnings : [];

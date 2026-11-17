@@ -10,10 +10,11 @@ import {
 } from '../config';
 import { generate } from '../core/generate';
 import { buildTxtExport, exportFilename, formatTimestamp } from '../export/txt';
-import type { ConceptId, Result, ValidationIssue } from '../model/types';
+import type { Result, ValidationIssue } from '../model/types';
 import { copyText, downloadText } from './browser';
 import { ConceptPanel, termsInputId } from './ConceptPanel';
 import { emptyForm, exampleForm, isBlank, toModel, type FormState } from './formState';
+import { headingInputId } from './HeadingList';
 import { IssueList } from './IssueList';
 import { OutputCard, type OutputState } from './OutputCard';
 import { useDebounced } from './useDebounced';
@@ -25,8 +26,14 @@ export interface AppProps {
   now?: () => Date;
 }
 
-function firstErrorConcept(issues: readonly ValidationIssue[]): ConceptId | undefined {
-  return issues.find((issue) => issue.severity === 'error' && issue.concept)?.concept;
+/** 第一個錯誤對應的輸入框 id：heading 錯誤定位到該筆 heading，其餘定位到概念的關鍵字欄。 */
+function firstErrorInputId(issues: readonly ValidationIssue[]): string {
+  const issue = issues.find((item) => item.severity === 'error' && item.concept);
+  if (!issue?.concept) return termsInputId('P');
+  if ((issue.field === 'mesh' || issue.field === 'emtree') && issue.index !== undefined) {
+    return headingInputId(issue.concept, issue.field, issue.index);
+  }
+  return termsInputId(issue.concept);
 }
 
 function copyAllText(results: readonly Result[]): string {
@@ -59,9 +66,9 @@ export function App({ debounceMs = LIVE_PREVIEW_DEBOUNCE_MS, now = () => new Dat
   const handleGenerate = () => {
     flush();
     const current = isBlank(form) ? null : generate(toModel(form));
-    const target = current ? firstErrorConcept(current.issues) : 'P';
     if (!current || !current.results) {
-      document.getElementById(termsInputId(target ?? 'P'))?.focus();
+      const target = current ? firstErrorInputId(current.issues) : termsInputId('P');
+      document.getElementById(target)?.focus();
       setStatus(current ? '輸入有需要修正的地方，已移到第一個問題。' : '請先輸入關鍵字。');
       return;
     }

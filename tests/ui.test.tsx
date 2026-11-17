@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PLATFORM_LABELS, PLATFORM_ORDER } from '../src/config';
@@ -72,6 +72,63 @@ describe('起始畫面', () => {
   });
 });
 
+describe('live preview 等待期間（D9，正式 debounce 300 ms）', () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  function setupDebounced() {
+    vi.useFakeTimers();
+    render(<App debounceMs={300} now={() => new Date(2026, 10, 13, 15, 52)} />);
+  }
+
+  /** 以單一 change 事件改寫 P 欄（fake timers 下 user-event 會卡住計時器）。 */
+  function appendToP(line: string) {
+    const field = terms('P') as HTMLTextAreaElement;
+    fireEvent.change(field, { target: { value: `${field.value}\n${line}` } });
+  }
+
+  function controlsDisabled() {
+    for (const platform of PLATFORM_ORDER) {
+      expect(queryText(platform)).toBeNull();
+      expect(within(card(platform)).getByRole('button', { name: /^複製/ })).toBeDisabled();
+      expect(card(platform)).toHaveTextContent('更新中…');
+    }
+    expect(within(card('pubmed')).queryByRole('link', { name: '在 PubMed 開啟這個查詢' })).toBeNull();
+    expect(screen.getByRole('button', { name: '複製全部查詢' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '下載 TXT 檔' })).toBeDisabled();
+  }
+
+  it('修改後到 debounce 結束前不顯示舊輸出、停用所有複製與匯出；結束後顯示新輸出', () => {
+    setupDebounced();
+    act(() => vi.advanceTimersByTime(300));
+    expect(queryText('pubmed')).toBe(GOLDEN.pubmed);
+
+    appendToP('asthma');
+    controlsDisabled();
+    act(() => vi.advanceTimersByTime(299));
+    controlsDisabled();
+    act(() => vi.advanceTimersByTime(1));
+    expect(queryText('pubmed')).toContain('asthma[tiab]');
+    expect(within(card('pubmed')).getByRole('button', { name: /^複製/ })).toBeEnabled();
+    expect(screen.getByRole('button', { name: '下載 TXT 檔' })).toBeEnabled();
+  });
+
+  it('連續修改：前一次的計時器不會把輸出還原成中間狀態', () => {
+    setupDebounced();
+    act(() => vi.advanceTimersByTime(300));
+
+    appendToP('asthma');
+    act(() => vi.advanceTimersByTime(200));
+    appendToP('copd');
+    act(() => vi.advanceTimersByTime(200));
+    // 第一次修改後已滿 400 ms，但第二次修改只過 200 ms：仍須在等待中
+    controlsDisabled();
+    act(() => vi.advanceTimersByTime(100));
+    expect(queryText('pubmed')).toContain('asthma[tiab] OR copd[tiab]');
+  });
+});
+
 describe('複製與匯出（T20、T21）', () => {
   it('T20：複製按鈕只寫入 query 本身', async () => {
     const { user, writeText } = setup();
@@ -82,6 +139,40 @@ describe('複製與匯出（T20、T21）', () => {
       expect(writeText).toHaveBeenLastCalledWith(GOLDEN[platform]);
     }
     expect(screen.getByRole('status')).toHaveTextContent('已複製 Ovid MEDLINE 查詢');
+  });
+
+  it('複製後修改輸入：新 query 不沿用「已複製」', async () => {
+    const { user } = setup();
+    const copyButton = () => within(card('pubmed')).getByRole('button', { name: /複製 PubMed|已複製/ });
+    await user.click(copyButton());
+    expect(copyButton()).toHaveTextContent('已複製');
+
+    await user.type(terms('P'), '{Enter}asthma');
+    await settle();
+    expect(queryText('pubmed')).toContain('asthma[tiab]');
+    expect(copyButton()).toHaveTextContent('複製 PubMed 查詢');
+  });
+
+  it('剪貼簿延遲完成時輸入已變更：不顯示成功，並提示複製到的是先前的查詢', async () => {
+    const { user, writeText } = setup();
+    let resolveWrite: () => void = () => {};
+    writeText.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveWrite = resolve;
+        }),
+    );
+    await user.click(within(card('pubmed')).getByRole('button', { name: /複製 PubMed/ }));
+    expect(writeText).toHaveBeenLastCalledWith(GOLDEN.pubmed);
+
+    await user.type(terms('P'), '{Enter}asthma');
+    await settle();
+    await act(async () => resolveWrite());
+
+    expect(within(card('pubmed')).getByRole('button', { name: /複製 PubMed/ })).toHaveTextContent(
+      '複製 PubMed 查詢',
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('輸入已變更');
   });
 
   it('剪貼簿失敗時告知使用者，不假裝成功', async () => {
@@ -210,6 +301,41 @@ describe('subject heading（T12、T14）', () => {
     expect(queryText('ovid-medline')).toContain('(exp Hypertension/ OR hypertension.ti,ab,kf.');
     expect(queryText('embase-com')).toBe(GOLDEN['embase-com']);
     expect(card('embase-com')).toHaveTextContent('Emtree mapping requires verification');
+  });
+
+  it('勾選查證後修改 heading 名稱：自動取消勾選並重新擋下，不輸出未查證的新名稱', async () => {
+    const { user } = setup();
+    const panel = await addMesh(user, 'Hypertension');
+    const confirm = within(panel).getByRole('checkbox', { name: '我已查證這個 heading 存在' });
+    const explode = within(panel).getByRole('checkbox', { name: '含下位詞（explode）' });
+    await user.click(confirm);
+    await settle();
+    expect(queryText('pubmed')).toContain('"Hypertension"[MeSH Terms]');
+
+    // 切換 explode 不影響查證（heading 名稱沒變）
+    await user.click(explode);
+    await settle();
+    expect(confirm).toBeChecked();
+    expect(queryText('pubmed')).toContain('"Hypertension"[MeSH Terms:noexp]');
+
+    await user.type(screen.getByRole('textbox', { name: 'P 的 MeSH heading 第 1 筆' }), 'Invented');
+    await settle();
+    expect(confirm).not.toBeChecked();
+    expect(screen.getByText(/尚未確認/)).toBeInTheDocument();
+    expect(queryText('pubmed')).toBeNull();
+    expect(queryText('ovid-medline')).toBeNull();
+  });
+
+  it('產生查詢按鈕：heading 有錯時焦點移到該筆 heading，而非關鍵字欄', async () => {
+    const { user } = setup();
+    const panel = await addMesh(user, 'Hypertension');
+    await user.click(within(panel).getByRole('checkbox', { name: '我已查證這個 heading 存在' }));
+    await user.click(within(panel).getByRole('button', { name: '新增 MeSH heading' }));
+    const second = screen.getByRole('textbox', { name: 'P 的 MeSH heading 第 2 筆' });
+    await user.type(second, 'Invalid/Heading');
+    await user.click(screen.getByRole('button', { name: '產生查詢' }));
+    expect(second).toHaveFocus();
+    expect(terms('P')).not.toHaveFocus();
   });
 
   it('T14：P 只剩 MeSH 時 Embase.com 不輸出並說明原因，其他平台照常', async () => {

@@ -26,6 +26,11 @@ export interface Emitter {
   vocabulary: Vocabulary;
   freeText(term: FreeTextTerm): string;
   heading(value: string, explode: boolean): string;
+  /**
+   * 此平台無法安全輸出的 free text（語法未經驗證）。回傳 blocking error 時整個平台不輸出，
+   * 其他平台不受影響；不可改寫 term 後照樣輸出（spec §2.2 不得靜默改變）。
+   */
+  unsupported?(term: FreeTextTerm, concept: ConceptExpr): Message | null;
   /** 平台專屬的補充說明，只在成功產生 query 時呼叫。 */
   notes?(ast: QueryAst, query: string): Message[];
 }
@@ -108,6 +113,15 @@ export function renderWith(ast: QueryAst, emitter: Emitter): Result {
   const errors: Message[] = [];
   const gaps: Message[] = [];
   const groups: QueryGroup[] = [];
+  for (const concept of ast.concepts) {
+    for (const term of concept.terms) {
+      const problem = term.kind === 'freeText' ? emitter.unsupported?.(term, concept) : null;
+      if (problem) errors.push(problem);
+    }
+  }
+  if (errors.length > 0) {
+    return { platform, groups: [], query: null, warnings: errors };
+  }
   for (const concept of ast.concepts) {
     const parts = renderConcept(concept, emitter);
     if (parts.length === 0) {

@@ -12,6 +12,11 @@ export interface HeadingListProps {
   onChange: (rows: HeadingRow[]) => void;
 }
 
+/** heading 輸入框的 id；index 與 core 回報的 `ValidationIssue.index` 對齊（同一陣列、不過濾空列）。 */
+export function headingInputId(concept: ConceptId, vocabulary: Vocabulary, index: number): string {
+  return `heading-${concept}-${vocabulary}-${index}`;
+}
+
 export function HeadingList({ concept, vocabulary, rows, issues, onChange }: HeadingListProps) {
   const help = VOCABULARY_HELP[vocabulary];
   const update = (key: number, patch: Partial<HeadingRow>) =>
@@ -33,6 +38,7 @@ export function HeadingList({ concept, vocabulary, rows, issues, onChange }: Hea
         return (
           <div key={row.key} className="headings__row">
             <input
+              id={headingInputId(concept, vocabulary, index)}
               className="headings__input"
               type="text"
               aria-label={name}
@@ -43,7 +49,8 @@ export function HeadingList({ concept, vocabulary, rows, issues, onChange }: Hea
               autoCorrect="off"
               spellCheck={false}
               value={row.term}
-              onChange={(event) => update(row.key, { term: event.target.value })}
+              // 查證的是「這個名稱」：名稱一改就撤銷確認，否則新名稱會沿用舊的查證直接輸出
+              onChange={(event) => update(row.key, { term: event.target.value, confirmed: false })}
             />
             <label className="headings__check">
               <input
