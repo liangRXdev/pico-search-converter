@@ -74,9 +74,13 @@ export const PUBMED_SEARCH_URL = 'https://pubmed.ncbi.nlm.nih.gov/?term=';
 /**
  * 各平台是否已完成 live 貼上驗證（spec §6.2、§10）。
  * 只有在 docs/live-validation.md 有對應紀錄後才可改為 true。
+ * 驗證涵蓋的是 golden fixture 的語法形態；新增輸出形態時須補 live 紀錄。
  */
 export const LIVE_VALIDATED: Readonly<Record<Platform, boolean>> = {
-  pubmed: false,
-  'embase-com': false,
-  'ovid-medline': false,
+  pubmed: true,
+  'embase-com': true,
+  'ovid-medline': true,
 };
+
+/** live 驗證的執行日期（docs/live-validation.md）。 */
+export const LIVE_VALIDATION_DATE = '2026-11-17';

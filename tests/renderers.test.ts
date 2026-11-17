@@ -242,12 +242,13 @@ describe('Ovid 保留字', () => {
 });
 
 describe('各平台固定提示', () => {
-  it('每個平台都標示結構轉譯與未經 live 驗證', () => {
+  it('每個平台都標示結構轉譯；已 live 驗證的平台不再標示 Not live-validated', () => {
     const results = run([block('P', ['hypertension'])]);
     for (const platform of PLATFORM_ORDER) {
       expect(codesOf(results[platform])).toEqual(
-        expect.arrayContaining([CODES.STRUCTURAL_TRANSLATION, CODES.NOT_LIVE_VALIDATED]),
+        expect.arrayContaining([CODES.STRUCTURAL_TRANSLATION]),
       );
+      expect(codesOf(results[platform])).not.toContain(CODES.NOT_LIVE_VALIDATED);
     }
     expect(codesOf(results.pubmed)).toContain(CODES.PUBMED_EXPLICIT_FIELDS);
   });

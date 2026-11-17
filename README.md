@@ -16,11 +16,17 @@
 
 | 平台 | 輸出格式是否已在實際資料庫貼上執行驗證 |
 |---|---|
-| PubMed | 尚未（Not live-validated） |
-| Embase.com (Elsevier) | 尚未（Not live-validated） |
-| Ovid MEDLINE | 尚未（Not live-validated） |
+| PubMed | 已驗證（2026-11-17） |
+| Embase.com (Elsevier) | 已驗證（2026-11-17） |
+| Ovid MEDLINE | 已驗證（2026-11-17） |
 
-驗證用的查詢與紀錄表在 [`docs/live-validation.md`](docs/live-validation.md)。未完成前，畫面上每個平台都會顯示「尚未實機驗證」。
+驗證紀錄在 [`docs/live-validation.md`](docs/live-validation.md)：四組 golden 查詢在三個平台皆無語法錯誤，平台的解析結果與預期結構一致。驗證涵蓋的是這些語法形態（片語、截字、連字號、引號內含 and、explode／non-explode heading、含逗號的 heading），不代表任意輸入在任何資料庫版本都已驗證。
+
+實測後確定的規則：
+
+- 撇號（如 `Crohn's`）維持拒絕：Embase.com 以雙引號包覆會出現語法錯誤。
+- Ovid 中 `and`、`use` 等保留字必須加引號；未加引號時 Ovid 不一定報錯，可能直接搜不到。
+- Ovid 遇到「保留字加截字」（如 `freq*`、`with*`）時不產生查詢：加引號會失去截字、不加引號會被當成運算子，安全寫法尚未驗證。其他平台照常輸出。
 
 ## 語法對照
 

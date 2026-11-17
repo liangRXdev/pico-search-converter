@@ -6,6 +6,7 @@ import {
   CONCEPT_ORDER,
   DISCLAIMER,
   LIVE_VALIDATED,
+  LIVE_VALIDATION_DATE,
   PLATFORM_LABELS,
   SOURCE_LINKS,
 } from '../config';
@@ -83,7 +84,7 @@ function platformSection(result: Result): string[] {
   const lines = [`[${PLATFORM_LABELS[result.platform]}]`];
   lines.push(result.query ?? '（未輸出查詢，原因見下方）');
   lines.push(
-    `驗證狀態：${LIVE_VALIDATED[result.platform] ? '輸出格式已實機驗證' : 'Not live-validated（輸出格式尚未實機驗證）'}`,
+    `驗證狀態：${LIVE_VALIDATED[result.platform] ? `輸出格式已實機驗證（${LIVE_VALIDATION_DATE}）` : 'Not live-validated（輸出格式尚未實機驗證）'}`,
   );
   if (result.warnings.length > 0) lines.push('注意事項：', ...messageLines(result.warnings));
   return lines;

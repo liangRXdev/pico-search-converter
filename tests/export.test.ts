@@ -36,7 +36,8 @@ describe('TXT 匯出（T21）', () => {
     expect(text).toContain(`產生時間：${GENERATED_AT}`);
     expect(text).toContain(DISCLAIMER);
     for (const link of SOURCE_LINKS) expect(text).toContain(link.url);
-    expect(text.match(/Not live-validated/g)?.length).toBeGreaterThanOrEqual(3);
+    expect(text.match(/驗證狀態：輸出格式已實機驗證（2026-11-17）/g)).toHaveLength(3);
+    expect(text).not.toContain('Not live-validated');
   });
 
   it('記錄輸入內容，並標明哪些概念未納入', () => {

@@ -115,13 +115,21 @@
 ## M7 — Live 驗證與發布（依 D8）
 
 - [x] 產出 live 測試包 `docs/live-validation.md`（2026-11-13）
-- [ ] **使用者**：PubMed 貼上 A 組 + B5，填寫紀錄
-- [ ] **使用者**：Embase.com 貼上 A 組 + B1（apostrophe）、B2（連字號），填寫紀錄
-- [ ] **使用者**：Ovid MEDLINE 貼上 A 組 + B3（保留字）、B4（逗號 heading），填寫紀錄（含資料庫區段名稱）
-- [ ] 依紀錄修正 renderer／驗證規則；通過的平台將 `LIVE_VALIDATED` 改為 `true`
+- [x] **使用者**：PubMed 貼上 A 組 + B5，填寫紀錄（2026-11-17，通過）
+- [x] **使用者**：Embase.com 貼上 A 組 + B1（apostrophe）、B2（連字號），填寫紀錄（2026-11-17，通過；撇號維持拒絕、連字號維持加引號）
+- [x] **使用者**：Ovid MEDLINE 貼上 A 組 + B3（保留字）、B4（逗號 heading），填寫紀錄（2026-11-17，通過）
+  - [ ] 補填 Ovid 資料庫區段名稱
+- [x] 依紀錄修正 renderer／驗證規則；通過的平台將 `LIVE_VALIDATED` 改為 `true`（三平台皆 true）
 - [ ] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）
 - [ ] §10 Definition of Done 逐項核對
-- [ ] `/codex-review` 獨立覆審
+- [x] `/codex-review` 獨立覆審（2026-11-17；`.ai-review/verdict.md`：接受 7／部分接受 3）
+  - [x] C1 High：Ovid 保留字加截字遺失 `*` → 改為 Ovid blocking error
+  - [x] C2 High：heading 改名沿用「已查證」→ 改名即撤銷
+  - [x] C3 Medium：複製回饋綁定實際複製的 query；延遲完成時提示輸入已變更
+  - [x] C4 Medium：heading 錯誤時 Generate 焦點定位到該 heading
+  - [x] T2 Medium：非零 debounce + fake timers 測 D9 等待期間（含連續修改）
+  - [ ] T1 Medium（部分接受）：離線檢查成功訊息只宣稱實際檢查的性質，補 `.src=`／`import(` 與負向 fixture
+  - [ ] Low：T3 驗證包依「案例 × 平台」比對、T4 clipboard fallback 成功路徑、C5 UI 測試加 `textContent === result.query`、D1 engines 對齊 jsdom
 
 ## Backlog（Phase 2+，本期不做）
 

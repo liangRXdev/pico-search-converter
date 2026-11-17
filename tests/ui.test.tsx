@@ -62,10 +62,10 @@ describe('起始畫面', () => {
     expect(queryText('pubmed')).not.toContain('blood pressure"[tiab]) AND ("blood');
   });
 
-  it('每個平台都標示尚未實機驗證，並顯示非等價聲明與隱私提醒', () => {
+  it('三個平台皆已 live 驗證：不顯示尚未驗證標章；非等價聲明與隱私提醒照常顯示', () => {
     setup();
     for (const platform of PLATFORM_ORDER) {
-      expect(card(platform)).toHaveTextContent('尚未實機驗證');
+      expect(card(platform)).not.toHaveTextContent('尚未實機驗證');
     }
     expect(screen.getByText(/不是經過驗證的完整檢索策略/)).toBeInTheDocument();
     expect(screen.getByText(/請勿輸入可辨識病人身分的資訊/)).toBeInTheDocument();
