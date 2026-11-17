@@ -98,7 +98,7 @@
 - [x] `tests/ui.test.tsx`（22 個測試）：T02、T03、T12、T14、T17、T20、T21、T24
 - [x] 真實 Chrome 檢查（production build）：query 正確、字型載入、雙欄版面、無橫向溢出、無 console error、只有同源請求
 - [x] 目視檢查：使用者於 2026-11-13 確認通過（Claude 端截圖工具逾時，僅以 JS 量測版面）
-- [ ] 手機寬度實測（使用者回覆未提及，列入 M7 手動檢核）
+- [x] 手機寬度實測（2026-11-17 使用者實機操作通過）
 
 ## M6 — CI／部署／文件
 
@@ -110,9 +110,9 @@
 - [x] repo 設定：Pages source 設為 GitHub Actions
 - [x] CI 首次執行通過（check + deploy）；線上頁面與 JS／CSS 皆回 200
 - [x] README 補上線上網址
-- [ ] 線上版在真實瀏覽器開啟並操作一次（目前只以 HTTP 200 確認，列入 M7）
+- [x] 線上版在真實瀏覽器開啟並操作一次（2026-11-17 Chrome 實測 + 使用者實機操作）
 
-## M7 — Live 驗證與發布（依 D8）
+## M7 — Live 驗證與發布（依 D8）— 2026-11-17 結案
 
 - [x] 產出 live 測試包 `docs/live-validation.md`（2026-11-13）
 - [x] **使用者**：PubMed 貼上 A 組 + B5，填寫紀錄（2026-11-17，通過）
@@ -120,8 +120,15 @@
 - [x] **使用者**：Ovid MEDLINE 貼上 A 組 + B3（保留字）、B4（逗號 heading），填寫紀錄（2026-11-17，通過）
   - [x] 補填 Ovid 資料庫區段名稱
 - [x] 依紀錄修正 renderer／驗證規則；通過的平台將 `LIVE_VALIDATED` 改為 `true`（三平台皆 true）
-- [ ] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）
-- [ ] §10 Definition of Done 逐項核對
+- [x] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）（2026-11-17 使用者執行通過）
+- [x] §10 Definition of Done 逐項核對（2026-11-17）
+  - [x] 兩概念範例免安裝即得三組標示清楚的輸出：預載 spec §5 範例；`tests/ui.test.tsx` T01–T03
+  - [x] 複製結果保留明確 Boolean 分組、欄位代碼正確：golden fixture + 三平台 live 驗證（`docs/live-validation.md` A 組）
+  - [x] heading 不靜默跨詞彙庫、不支援語法回錯誤：T12–T14、T11／T15／T16；覆審 C1、C2 修正
+  - [x] T01–T25 本機與 CI 通過：自動化部分 CI 綠；T20／T23／T24 依 D6 為自動 + 手動，手動部分已執行
+  - [x] 輸入不離開瀏覽器、無需機密：離線靜態檢查（含 SW 同源例外）＋手動斷網
+  - [x] 每個平台至少一次實機執行紀錄：三平台皆有
+  - [x] README 載明支援／不支援語法、來源連結、驗證限制
 - [x] `/codex-review` 獨立覆審（2026-11-17；`.ai-review/verdict.md`：接受 7／部分接受 3）
   - [x] C1 High：Ovid 保留字加截字遺失 `*` → 改為 Ovid blocking error
   - [x] C2 High：heading 改名沿用「已查證」→ 改名即撤銷
@@ -138,8 +145,9 @@
 - [x] `scripts/sw-plugin.mjs` 產生 sw.js：網路優先導覽、預先快取、前綴守衛；`tests/service-worker.test.ts`
 - [x] T23 離線檢查的兩個窄例外與反例測試
 - [x] 跨 repo SW 快取越界檢查（pharmacy-portal `tools/check-sw-cache-scope.js`）通過
-- [ ] 線上確認 SW 啟用、離線重新整理可開
-- [ ] **使用者**：手機「加到主畫面」實測（Android maskable、iOS apple-touch-icon）
+- [x] 線上確認 SW 啟用、離線重新整理可開（2026-11-17 Chrome：SW activated 並控制頁面、12 個預先快取項目、同網域 21 個他站快取未受影響；離線重新整理由使用者實測）
+- [x] **使用者**：手機「加到主畫面」實測（2026-11-17 通過）
+- [x] 收錄 pharmacy-portal（PR #15）與 GitHub 個人頁
 
 ## Backlog（Phase 2+，本期不做）
 

@@ -96,8 +96,8 @@ PWA：`scripts/sw-plugin.mjs` 在 build 時依實際產物產生 `dist/sw.js`（
 
 規格（`spec.md` §6.1）的 T01–T25 中，以下兩項不是真實瀏覽器的自動化測試：
 
-- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——HTML／CSS 只載入同源資源；JS 不含 `fetch`、`XMLHttpRequest`、`new Image`、動態 `import()` 等已知網路 API 字串，外部網址只能是允許清單內的導覽連結，不能出現在 `src`／`href` 等資源載入寫法中；唯一例外是 Service Worker：主程式只能註冊同源 `sw.js`，`sw.js` 的 `fetch` 必須在同源守衛之後且不得含外部網址（規則與反例測試見 `scripts/offline-rules.mjs`、`tests/check-offline.test.ts`）。這是字串樣式比對，無法證明執行期沒有網路請求；真實瀏覽器的斷網操作需手動執行。
-- **T24（鍵盤與螢幕閱讀器）**：自動化測試涵蓋控制項的可辨識名稱、原生語意元素、Tab 可達與鍵盤觸發；螢幕閱讀器的實際朗讀需手動檢查。
+- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——HTML／CSS 只載入同源資源；JS 不含 `fetch`、`XMLHttpRequest`、`new Image`、動態 `import()` 等已知網路 API 字串，外部網址只能是允許清單內的導覽連結，不能出現在 `src`／`href` 等資源載入寫法中；唯一例外是 Service Worker：主程式只能註冊同源 `sw.js`，`sw.js` 的 `fetch` 必須在同源守衛之後且不得含外部網址（規則與反例測試見 `scripts/offline-rules.mjs`、`tests/check-offline.test.ts`）。這是字串樣式比對，無法證明執行期沒有網路請求；真實瀏覽器的斷網操作需手動執行（2026-11-17 已手動檢核通過）。
+- **T24（鍵盤與螢幕閱讀器）**：自動化測試涵蓋控制項的可辨識名稱、原生語意元素、Tab 可達與鍵盤觸發；螢幕閱讀器的實際朗讀需手動檢查（2026-11-17 已手動檢核通過）。
 
 自動化測試驗證的是「本工具是否依規則產生字串」，不是各資料庫是否接受這些字串，後者見上方的驗證狀態。
 
