@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { checkFile } from '../scripts/offline-rules.mjs';
+import SW_TEMPLATE from '../scripts/sw-template.js?raw';
 
 // 正向樣本取自目前 production bundle 內實際出現的寫法；必須通過，否則規則會讓 CI 永遠紅。
 const BUNDLE_LIKE = [
@@ -50,5 +51,43 @@ describe('T23 離線靜態檢查（scripts/offline-rules.mjs）', () => {
     expect(checkFile('a.css', '@font-face{src:url(https://fonts.example.com/a.woff2)}')).not.toEqual([]);
     expect(checkFile('a.css', '@import "x.css";')).not.toEqual([]);
     expect(checkFile('a.css', '@font-face{src:url(/pico-search-converter/assets/a.woff2)}')).toEqual([]);
+  });
+});
+
+describe('T23 的 Service Worker 窄例外', () => {
+  const REGISTER =
+    '"serviceWorker"in navigator&&window.addEventListener(`load`,()=>{navigator.serviceWorker.register(`/pico-search-converter/sw.js`).catch(()=>{})})';
+
+  it('主程式：只有「判斷支援 + 註冊」寫法通過', () => {
+    expect(checkFile('dist/assets/index.js', REGISTER)).toEqual([]);
+  });
+
+  it.each([
+    ['取得既有註冊', 'navigator.serviceWorker.getRegistration()'],
+    ['對 SW 送訊息', 'navigator.serviceWorker.controller.postMessage(x)'],
+    ['註冊外部網址的 SW', 'navigator.serviceWorker.register("https://evil.example.com/sw.js")'],
+    ['主程式內的 fetch 不因 SW 例外放行', `${REGISTER};fetch("/x")`],
+  ])('主程式：%s → 不通過', (_name, code) => {
+    expect(checkFile('dist/assets/index.js', code)).not.toEqual([]);
+  });
+
+  it('實際的 sw.js 原稿通過（Windows 與 POSIX 路徑皆辨識為 SW）', () => {
+    expect(checkFile('dist/sw.js', SW_TEMPLATE)).toEqual([]);
+    expect(checkFile('dist\\sw.js', SW_TEMPLATE)).toEqual([]);
+  });
+
+  it('同名但不是 sw.js 的檔案不適用例外', () => {
+    expect(checkFile('dist/assets/mysw.js', SW_TEMPLATE)).not.toEqual([]);
+  });
+
+  it.each([
+    ['拿掉同源守衛', (src: string) => src.replace('if (url.origin !== self.location.origin) return;', '')],
+    ['守衛放在 fetch 之後', (src: string) => `fetch("/warmup");\n${src}`],
+    ['加入外部網址', (src: string) => src.replace("const SHELL_KEY = './';", "const SHELL_KEY = 'https://cdn.example.com/';")],
+    ['加入 importScripts', (src: string) => `importScripts("x.js");\n${src}`],
+  ])('sw.js：%s → 不通過', (_name, mutate) => {
+    const mutated = mutate(SW_TEMPLATE);
+    expect(mutated).not.toBe(SW_TEMPLATE);
+    expect(checkFile('dist/sw.js', mutated)).not.toEqual([]);
   });
 });

@@ -7,7 +7,7 @@
 - 階段：**M7 進行中：三平台 live 驗證通過；Codex 覆審 10 項全部處理完畢；剩手動檢核（手機寬度、斷網、螢幕閱讀器）與 §10 DoD 核對**
 - 線上網址：https://liangrxdev.github.io/pico-search-converter/
 - Repo：https://github.com/liangRXdev/pico-search-converter（public）
-- 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（198 個）／`build` 本機通過
+- 程式碼：core、三個平台 renderer、TXT 匯出、完整 UI；`typecheck`／`test`（220 個）／`build` 本機通過
 - build 產物：JS 252 kB（gzip 81 kB）、CSS 8.8 kB、字型 woff2 兩個各約 15 kB
 - 阻塞：無
 - 未完成的驗證：手機寬度；線上版的真實瀏覽器操作、斷網測試（T23）、螢幕閱讀器（T24）
@@ -66,6 +66,9 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 | 日期 | 編號 | 決策 | 理由 |
 |---|---|---|---|
+| 2026-11-17 | — | PWA：自寫 Vite plugin 產生 sw.js（不用 vite-plugin-pwa）；導覽網路優先、靜態資源預先快取 | 語法規則會修正，「先給快取」會讓使用者拿到舊規則；不新增依賴 |
+| 2026-11-17 | — | T23 離線檢查開兩個窄例外：主程式只允許 `serviceWorker.register`；`sw.js` 的 fetch 須在同源守衛之後、不得含外部網址 | PWA 必然用到這兩個 API；例外各有反例測試 |
+| 2026-11-17 | — | 圖示：墨藍底 + 2×2 P／I／C／O 四色方塊，字母以幾何路徑繪製 | 呼應介面四色分組；不依賴字型，小尺寸仍可辨識 |
 | 2026-11-17 | — | 三平台 `LIVE_VALIDATED` 改為 true | live 測試 A 組四組 golden 皆無語法錯誤（`docs/live-validation.md`） |
 | 2026-11-17 | — | 撇號維持拒絕（D1 遺留項結案） | B1：Embase.com 以雙引號包覆撇號出現語法錯誤 |
 | 2026-11-17 | — | 維持含連字號一律加引號 | B2：加引號寫法命中 ≥ 空白與未加引號寫法，不會漏檢 |
@@ -110,6 +113,7 @@ M1–M4（core + render + 測試）為主體且風險最低；M5 UI 次之；M7 
 
 ## 變更紀錄
 
+- 2026-11-17：PWA 化（圖示、manifest、sw.js）；收錄到 pharmacy-portal 與 GitHub 個人頁。
 - 2026-11-17：修正覆審 T1（離線檢查規則模組化＋反例測試）、T3、T4、C5、D1；補 Ovid 區段名稱。
 - 2026-11-17：三平台 live 驗證通過；修正覆審 C1（Ovid 保留字截字遺失）、C2（heading 改名沿用查證）、C3（複製回饋綁定 query）、C4（heading 錯誤焦點）、T2（D9 等待期間測試）。
 - 2026-11-13：建立 public repo、啟用 Pages、首次 CI 與部署通過，網站上線。

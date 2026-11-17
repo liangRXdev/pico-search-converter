@@ -131,6 +131,16 @@
   - [x] T1 Medium（部分接受）：規則抽成 `scripts/offline-rules.mjs`，補資源載入寫法與 `new Image`／`import(` 偵測、16 個正反例測試，成功訊息改為只宣稱實際檢查的性質
   - [x] Low：T3 驗證包依「案例 × 平台」比對、T4 clipboard fallback 成功路徑、C5 DOM 文字與複製字串一致、D1 engines 對齊 jsdom
 
+## M8 — PWA 與收錄（2026-11-17）
+
+- [x] 圖示（設計 A）：`scripts/icon-source.mjs` + `scripts/gen-icons.mjs`（本機 Chrome 產 PNG）
+- [x] manifest、theme-color、apple-touch-icon、favicon
+- [x] `scripts/sw-plugin.mjs` 產生 sw.js：網路優先導覽、預先快取、前綴守衛；`tests/service-worker.test.ts`
+- [x] T23 離線檢查的兩個窄例外與反例測試
+- [x] 跨 repo SW 快取越界檢查（pharmacy-portal `tools/check-sw-cache-scope.js`）通過
+- [ ] 線上確認 SW 啟用、離線重新整理可開
+- [ ] **使用者**：手機「加到主畫面」實測（Android maskable、iOS apple-touch-icon）
+
 ## Backlog（Phase 2+，本期不做）
 
 - 受限 PubMed query parser、MeSH lookup（NLM API）、proximity 轉譯、Ovid history 格式

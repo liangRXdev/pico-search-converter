@@ -10,6 +10,8 @@
 
 純前端工具，免安裝、免登入。所有運算都在瀏覽器內完成，不會上傳任何輸入內容。
 
+可加到手機或電腦的主畫面（PWA）。開啟過一次後，離線也能使用；有網路時一律載入最新版，語法規則修正後立即生效。
+
 > **這是語法轉譯工具，不是檢索策略產生器。** 三組輸出的括號與 Boolean 結構相同，但各平台的欄位涵蓋範圍只是近似、收錄內容不同，MeSH 與 Emtree 也不是一對一對應，命中筆數不會相同。輸出不代表系統性文獻回顧等級的完整檢索。
 
 ## 驗證狀態
@@ -83,7 +85,10 @@ npm run typecheck
 npm test
 npm run build
 npm run check:offline  # 靜態檢查 build 產物的外部資源與網路 API（需先 build）
+node scripts/gen-icons.mjs  # 重新產生 PWA 圖示（需本機 Chrome；產物已進版控）
 ```
+
+PWA：`scripts/sw-plugin.mjs` 在 build 時依實際產物產生 `dist/sw.js`（預先快取清單與以內容雜湊命名的快取版本），不使用 workbox。網頁本體網路優先、靜態資源快取優先；清舊快取時只刪 `pico-search-converter-` 前綴，不影響同網域其他工具。
 
 架構：`UI → normalize + validate → AST → 各平台 emitter`。`src/core` 與 `src/render` 是不依賴 React 的純函式；`tests/golden/*.json` 是固定的輸入與預期輸出。
 
@@ -91,7 +96,7 @@ npm run check:offline  # 靜態檢查 build 產物的外部資源與網路 API�
 
 規格（`spec.md` §6.1）的 T01–T25 中，以下兩項不是真實瀏覽器的自動化測試：
 
-- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——HTML／CSS 只載入同源資源；JS 不含 `fetch`、`XMLHttpRequest`、`new Image`、動態 `import()` 等已知網路 API 字串，外部網址只能是允許清單內的導覽連結，不能出現在 `src`／`href` 等資源載入寫法中（規則與反例測試見 `scripts/offline-rules.mjs`、`tests/check-offline.test.ts`）。這是字串樣式比對，無法證明執行期沒有網路請求；真實瀏覽器的斷網操作需手動執行。
+- **T23（離線可用）**：以 `npm run check:offline` 靜態檢查 build 產物——HTML／CSS 只載入同源資源；JS 不含 `fetch`、`XMLHttpRequest`、`new Image`、動態 `import()` 等已知網路 API 字串，外部網址只能是允許清單內的導覽連結，不能出現在 `src`／`href` 等資源載入寫法中；唯一例外是 Service Worker：主程式只能註冊同源 `sw.js`，`sw.js` 的 `fetch` 必須在同源守衛之後且不得含外部網址（規則與反例測試見 `scripts/offline-rules.mjs`、`tests/check-offline.test.ts`）。這是字串樣式比對，無法證明執行期沒有網路請求；真實瀏覽器的斷網操作需手動執行。
 - **T24（鍵盤與螢幕閱讀器）**：自動化測試涵蓋控制項的可辨識名稱、原生語意元素、Tab 可達與鍵盤觸發；螢幕閱讀器的實際朗讀需手動檢查。
 
 自動化測試驗證的是「本工具是否依規則產生字串」，不是各資料庫是否接受這些字串，後者見上方的驗證狀態。
