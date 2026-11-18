@@ -44,7 +44,7 @@ function copyAllText(results: readonly Result[]): string {
 }
 
 export function App({ debounceMs = LIVE_PREVIEW_DEBOUNCE_MS, now = () => new Date() }: AppProps) {
-  const [form, setForm] = useState<FormState>(exampleForm);
+  const [form, setForm] = useState<FormState>(emptyForm);
   const [settled, flush] = useDebounced(form, debounceMs);
   const [status, setStatus] = useState('');
   const outputRef = useRef<HTMLHeadingElement>(null);

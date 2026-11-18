@@ -122,7 +122,7 @@
 - [x] 依紀錄修正 renderer／驗證規則；通過的平台將 `LIVE_VALIDATED` 改為 `true`（三平台皆 true）
 - [x] 手動檢核：斷網後產生／複製／匯出（T23）、screen reader 朗讀（T24）（2026-11-17 使用者執行通過）
 - [x] §10 Definition of Done 逐項核對（2026-11-17）
-  - [x] 兩概念範例免安裝即得三組標示清楚的輸出：預載 spec §5 範例；`tests/ui.test.tsx` T01–T03
+  - [x] 兩概念範例免安裝即得三組標示清楚的輸出：「載入範例」帶入 spec §5 範例（起始畫面空白，2026-11-18）；`tests/ui.test.tsx` T01–T03
   - [x] 複製結果保留明確 Boolean 分組、欄位代碼正確：golden fixture + 三平台 live 驗證（`docs/live-validation.md` A 組）
   - [x] heading 不靜默跨詞彙庫、不支援語法回錯誤：T12–T14、T11／T15／T16；覆審 C1、C2 修正
   - [x] T01–T25 本機與 CI 通過：自動化部分 CI 綠；T20／T23／T24 依 D6 為自動 + 手動，手動部分已執行

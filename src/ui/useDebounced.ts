@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 /**
  * 回傳延遲更新的值，以及可立即同步的 flush。
  * `value !== settled` 期間代表畫面上的輸出尚未跟上輸入。
+ * delayMs <= 0 視為不延遲：直接回傳 value。
  */
 export function useDebounced<T>(value: T, delayMs: number): [settled: T, flush: () => void] {
   const [settled, setSettled] = useState(value);
@@ -13,5 +14,5 @@ export function useDebounced<T>(value: T, delayMs: number): [settled: T, flush: 
   }, [value, delayMs]);
 
   const flush = useCallback(() => setSettled(value), [value]);
-  return [settled, flush];
+  return [delayMs <= 0 ? value : settled, flush];
 }
