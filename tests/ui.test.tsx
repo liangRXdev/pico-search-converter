@@ -18,6 +18,7 @@ function setup() {
   const user = userEvent.setup();
   const writeText = vi.spyOn(navigator.clipboard, 'writeText');
   render(<App debounceMs={0} now={() => new Date(2026, 10, 13, 15, 52)} />);
+  fireEvent.click(screen.getByRole('button', { name: '載入範例' }));
   return { user, writeText };
 }
 
@@ -42,7 +43,15 @@ afterEach(() => {
 });
 
 describe('起始畫面', () => {
-  it('預載範例，三個平台顯示的文字與 golden query 逐字相同', () => {
+  it('開啟時表單全空、不帶範例，輸出區顯示引導而非錯誤', () => {
+    render(<App debounceMs={0} now={() => new Date(2026, 10, 13, 15, 52)} />);
+    for (const id of ['P', 'I', 'C', 'O']) expect(terms(id)).toHaveValue('');
+    for (const platform of PLATFORM_ORDER) expect(queryText(platform)).toBeNull();
+    expect(screen.getAllByText('輸入關鍵字後，這裡會出現可直接貼上的查詢。')).toHaveLength(3);
+    expect(screen.queryByText('需修正')).not.toBeInTheDocument();
+  });
+
+  it('載入範例後，三個平台顯示的文字與 golden query 逐字相同', () => {
     setup();
     for (const platform of PLATFORM_ORDER) {
       expect(queryText(platform)).toBe(GOLDEN[platform]);
@@ -80,6 +89,7 @@ describe('live preview 等待期間（D9，正式 debounce 300 ms）', () => {
   function setupDebounced() {
     vi.useFakeTimers();
     render(<App debounceMs={300} now={() => new Date(2026, 10, 13, 15, 52)} />);
+    fireEvent.click(screen.getByRole('button', { name: '載入範例' }));
   }
 
   /** 以單一 change 事件改寫 P 欄（fake timers 下 user-event 會卡住計時器）。 */
